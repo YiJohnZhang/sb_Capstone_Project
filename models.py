@@ -27,7 +27,6 @@ class User(db.Model):
 
     # insert foreignkey rel, roletable
 
-
     def __repr__(self):
         '''Self-representation for a User instance.'''
         return f'<User {self.username}: {self.first_name}>';
@@ -117,7 +116,7 @@ class User(db.Model):
     
     
 class Role(db.Model):
-    # seeded
+    # seeded and db edit only.
 
     __tablename__ = 'role';
 
@@ -130,7 +129,7 @@ class Role(db.Model):
         return f'<Role {self.id}: {self.role_name}>';
 
 class RoleTable(db.Model):
-    # seeded and injected
+    # seeded and db edit only.
 
     __tablename__ = 'userrole_join';
 
@@ -147,19 +146,37 @@ class RoleTable(db.Model):
 ''' =============PET MODEL=============
 '''
 class Pet(db.Model):
+    # seeded, injected, and api_created
+    
+    __tablename__ = 'pet';
     pass;
 
 class PetUserJoin(db.Model):
     # seeded and injected
 
-    __tablename__ = 'userrole_join';
+    __tablename__ = 'petuser_join';
 
-    pet_id = db.Column(db.String(32), db.ForeignKey(User.username, ondelete='CASCADE', onupdate='CASCADE'));
-    role_id = db.Column(db.SmallInteger, db.ForeignKey(Role.id, ondelete='CASCADE', onupdate='CASCADE'));
+    user_id = db.Column(db.String(32), db.ForeignKey(User.username, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
+    pet_id = db.Column(db.BigInteger, db.ForeignKey(Pet.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
 
-    userReference = db.relationship('User', backref=db.backref('userAlias', cascade='all, delete'));
-    roleReference = db.relationship('Role', backref=db.backref('roleJoinAlias', cascade='all, delete'));
+    userReference = db.relationship('User', backref=db.backref('userJoinAlias', cascade='all, delete'));
+    petReference = db.relationship('Pet', backref=db.backref('petJoinAlias', cascade='all, delete'));
 
+        # no through
+
+    def __repr__(self):
+        '''Self-representation for a PetUserJoin instance.'''
+        return f'<Pet-User {self.pet_id}-{self.user_id}>';
+
+    @classmethod
+    def returnPetUserByPrimaryKey(cls, username, petID):
+        '''Probably unused but here by default.'''
+        return cls.query.get_or_404((username, petID));
+
+    @classmethod
+    def returnPetUserByUsername(cls, username):
+        '''Return all pets uploaded by a specified User.'''
+        return cls.query.filter(cls.user_id == username).all();
 
 ''' =============PET CATEGORIES=============
 '''
@@ -213,7 +230,7 @@ class Color(db.Model):
         #   Light Colors: 1 - 100
         #   Dark Colors: 101 - 200
     color_name = db.Column(db.String(16), nullable = False);
-    color_hex = db.Column(db.String(6), nullable = False);
+    color_hex = db.Column(db.String(7), nullable = False);
 
     def __repr__(self):
         '''Self-representation for a Color instance.'''
@@ -236,3 +253,9 @@ class Breed(db.Model):
     def __repr__(self):
         '''Self-representation for a Breed instance.'''
         return f'<Breed {self.id}: {self.breed_name}>';
+
+class PrimaryBreedTable(db.Model):
+    pass;
+
+class SecondaryBreedTable(db.Model):
+    pass;
