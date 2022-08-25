@@ -1,0 +1,452 @@
+id,breed_name,breed_image
+1,American Shorthair,american-shorthair-1.jpg
+2,Abyssinian,abyssinian-1.jpg
+3,American Curl,american-curl-1.jpg
+4,American Bobtail,american-bobtail-1.jpg
+5,American Wirehair,american-wirehair-1.jpg
+6,Aegean,aegean-cat-1.jpg
+7,Australian Mist,australian-mist-1.jpg
+8,American Polydactyl,american-polydactyl-1.jpg
+9,Arabian Mau,arabian-mau-1.jpg
+10,Asian cat,malayan-cat-1.jpg
+11,Asian Semi-longhair,asian-semi-longhair-1.jpg
+12,British Shorthair,british-shorthair-1.jpg
+13,Bengal,bengal-1.jpg
+14,Burmese,burmese-1.jpg
+15,Birman,birman-1.jpg
+16,Balinese,balinese-1.jpg
+17,Bombay,bombay-cat-1.jpg
+18,Burmilla,burmilla-1.jpg
+19,Bambino,bambino-cat-1.jpg
+20,Brazilian Shorthair,brazilian-shorthair-1.jpg
+21,British Longhair,british-longhair-1.jpg
+22,Cornish Rex,cornish-rex-1.jpg
+23,Colorpoint Shorthair,colorpoint-shorthair-1.jpg
+24,Chartreux,chartreux-1.jpg
+25,California Spangled,california-spangled-cat-1.jpg
+26,Cymric,cymric-cat-1.jpg
+27,Chantilly-Tiffany,chantilly-1.jpg
+28,Chausie,chausie-1.jpg
+29,Cheetoh,cheetoh-1.jpg
+30,Cyprus,cyprus-cat-1.jpg
+31,Devon Rex,devon-rex-1.jpg
+32,Donskoy,donskoy-1.jpg
+33,Dwelf,dwelf-1.jpg
+34,Exotic Shorthair,exotic-shorthair-1.jpg
+35,Egyptian Mau,egyptian-mau-1.jpg
+36,European Burmese,european-burmese-1.jpg
+37,Elf cat,elf-cat-1.jpg
+38,Havana Brown,havana-brown-1.jpg
+39,Himalayan,himalayan-cat-1.jpg
+40,Japanese Bobtail,japanese-bobtail-1.jpg
+41,Javanese,javanese-cat-1.jpg
+42,Khao Manee,khao-manee-1.jpg
+43,Korat,korat-1.jpg
+44,Lykoi,lykoi-1.jpg
+45,LaPerm,laperm-1.jpg
+46,Maine Coon,maine-coon-1.jpg
+47,Manx,manx-1.jpg
+48,Munchkin,munchkin-cat-1.jpg
+49,Minskin,minskin-1.jpg
+50,Norwegian Forest Cat,norwegian-forest-cat-1.jpg
+51,Nebelung,nebelung-1.jpg
+52,Napoleon cat,napoleon-cat-1.jpg
+53,Oriental,oriental-shorthair-1.jpg
+54,Ocicat,ocicat-1.jpg
+55,Persian,persian-cat-1.jpg
+56,Pixie-bob,pixie-bob-1.jpg
+57,Peterbald,peterbald-1.jpg
+58,Ragdoll,ragdoll-1.jpg
+59,Russian Blue,russian-blue-1.jpg
+60,Ragamuffin,ragamuffin-cat-1.jpg
+61,Sphynx,sphynx-1.jpg
+62,Scottish Fold,scottish-fold-1.jpg
+63,Siamese,siamese-1.jpg
+64,Siberian,siberian-1.jpg
+65,Selkirk Rex,selkirk-rex-1.jpg
+66,Somali,somali-1.jpg
+67,Singapura,singapura-1.jpg
+68,Savannah,savannah-cat-1.jpg
+69,Snowshoe,snowshoe-cat-1.jpg
+70,Sokoke,sokoke-1.jpg
+71,Serengeti cat,serengeti-cat-1.jpg
+72,Tonkinese,tonkinese-1.jpg
+73,Turkish Angora,turkish-angora-1.jpg
+74,Turkish Van,turkish-van-1.jpg
+75,Toyger,toyger-1.jpg
+76,Thai cat,thai-cat-1.jpg
+77,Ukrainian Levkoy,ukrainian-levkoy-1.jpg
+78,York Chocolate,york-chocolate-1.jpg
+1001,Australian Shepherd,australian-shepherd-1.jpg
+1002,American Cocker Spaniel,cocker-spaniel-1.jpg
+1003,Akita,american-akita-1.jpg
+1004,Australian Cattle Dog,australian-cattle-dog-1.jpg
+1005,Airedale Terrier,airedale-terrier-1.jpg
+1006,Alaskan Malamute,alaskan-malamute-1.jpg
+1007,American Staffordshire Terrier,american-staffordshire-terrier-1.jpg
+1008,Anatolian Shepherd Dog,anatolian-shepherd-dog-1.jpg
+1009,American Eskimo Dog,american-eskimo-dog-1.jpg
+1010,Afghan Hound,afghan-hound-1.jpg
+1011,American Hairless Terrier,american-hairless-terrier-1.jpg
+1012,Australian Terrier,australian-terrier-1.jpg
+1013,American Water Spaniel,american-water-spaniel-1.jpg
+1014,Affenpinscher,affenpinscher-1.jpg
+1015,American English Coonhound,english-coonhound-1.jpg
+1016,American Foxhound,american-foxhound-1.jpg
+1017,Azawakh,azawakh-1.jpg
+1018,American Pit Bull Terrier,
+1019,American White Shepherd,
+1020,Alapaha Blue Blood Bulldog,
+1021,Alaskan Klee Kai,
+1022,Appenzeller Sennenhund,
+1023,Australian Bulldog,
+1024,Australian Kelpie,
+1025,Australian Stumpy Tail Cattle Dog,
+1026,Austrian Black and Tan Hound,
+1027,Austrian Pinscher,
+1028,Alaskan Husky,
+1029,American Bulldog,
+1030,Andalusian Hound,
+1031,American Mastiff,
+1032,Akbash Dog,
+1033,Alano Espanol,
+1034,Ariege Pointer,
+1035,Ariegeois,
+1036,Africanis,
+1037,Aidi,
+1038,American Staghound,
+1039,Alopekis,
+1040,Bulldog,bulldog-1.jpg
+1041,Beagle,beagle-1.jpg
+1042,Boxer,boxer-1.jpg
+1043,Boston Terrier,boston-terrier-1.jpg
+1044,Bernese Mountain Dog,bernese-mountain-dog-1.jpg
+1045,Brittany,brittany-1.jpg
+1046,Border Collie,border-collie-1.jpg
+1047,Basset Hound,basset-hound-1.jpg
+1048,Belgian Malinois,belgian-shepherd-malinois-1.jpg
+1049,Bichon Frise,bichon-frise-1.jpg
+1050,Bloodhound,bloodhound-1.jpg
+1051,Bullmastiff,bullmastiff-1.jpg
+1052,Bull Terrier,bull-terrier-1.jpg
+1053,Basenji,basenji-1.jpg
+1054,Boykin Spaniel,boykin-spaniel-1.jpg
+1055,Brussels Griffon,brussels-griffon-1.jpg
+1056,Bouvier des Flandres,bouvier-des-flandres-1.jpg
+1057,Border Terrier,border-terrier-1.jpg
+1058,Borzoi,borzoi-1.jpg
+1059,Belgian Tervuren,belgian-shepherd-tervuren-1.jpg
+1060,Belgian Sheepdog,groenendael-1.jpg
+1061,Beauceron,beauceron-1.jpg
+1062,Boerboel,boerboel-1.jpg
+1063,Bearded Collie,bearded-collie-1.jpg
+1064,Black Russian Terrier,black-russian-terrier-1.jpg
+1065,Black and Tan Coonhound,black-and-tan-coonhound-1.jpg
+1066,Bluetick Coonhound,bluetick-coonhound-1.jpg
+1067,Bedlington Terrier,bedlington-terrier-1.jpg
+1068,Barbet,barbet-1.jpg
+1069,Briard,briard-1.jpg
+1070,Berger Picard,berger-picard-1.jpg
+1071,Bergamasco,bergamasco-1.jpg
+1072,Bolognese dog,
+1073,Basset Bleu de Gascogne,
+1074,Basset Fauve de Bretagne,
+1075,Belgian Shepherd Laekenois,
+1076,Black Mouth Cur,
+1077,Black Norwegian Elkhound,
+1078,Blue Lacy,
+1079,Blue Picardy Spaniel,
+1080,Bohemian Shepherd,
+1081,Bracco Italiano,
+1082,Braque du Bourbonnais,
+1083,Brazilian Terrier,
+1084,Bulgarian Shepherd Dog,
+1085,Basset Artesien Normand,
+1086,Broholmer,
+1087,Biewer Terrier,
+1088,Briquet Griffon Vendeen,
+1089,Bukovina Sheepdog,
+1090,Beagle-Harrier,
+1091,Beaglier,
+1092,Bavarian Mountain Hound,
+1093,Bouvier des Ardennes,
+1094,Bull Arab,
+1095,Cavalier King Charles Spaniel,cavalier-king-charles-spaniel-1.jpg
+1096,Cane Corso,cane-corso-italiano-1.jpg
+1097,Chihuahua,chihuahua-1.jpg
+1098,Collie,rough-collie-1.jpg
+1099,Chesapeake Bay Retriever,chesapeake-bay-retriever-1.jpg
+1100,Cardigan Welsh Corgi,cardigan-welsh-corgi-1.jpg
+1101,Cairn Terrier,cairn-terrier-1.jpg
+1102,Chinese Crested,chinese-crested-1.jpg
+1103,Coton De Tulear,coton-de-tulear-1.jpg
+1104,Chow Chow,chow-chow-1.jpg
+1105,Clumber Spaniel,clumber-spaniel-1.jpg
+1106,Curly-Coated Retriever,curly-coated-retriever-1.jpg
+1107,Cirneco dell’Etna,cirneco-dell-etna-1.jpg
+1108,Canaan Dog,canaan-dog-1.jpg
+1109,Chinook,chinook-dog-1.jpg
+1110,Cesky Terrier,cesky-terrier-1.jpg
+1111,Cockapoo,
+1112,Canadian Eskimo Dog,
+1113,Carolina Dog,
+1114,Carpathian Sheepdog,
+1115,Catahoula Bulldog,
+1116,Catahoula Leopard Dog,
+1117,Catalan Sheepdog,
+1118,Caucasian Ovcharka,
+1119,Central Asian Ovtcharka,
+1120,Croatian Sheepdog,
+1121,Czechoslovakian Wolfdog,
+1122,Cesky Fousek,
+1123,Chart Polski,
+1124,Cairmal,
+1125,Chorkie,
+1126,Cockalier,
+1127,Caravan Hound,
+1128,Cão da Serra de Aires,
+1129,Chippiparai,
+1130,Chizer,
+1131,Cotonese,
+1132,Dachshund,dachshund-1.jpg
+1133,Doberman Pinscher,doberman-pinscher-1.jpg
+1134,Dalmatian,dalmatian-1.jpg
+1135,Dogue de Bordeaux,dogue-de-bordeaux-1.jpg
+1136,Dogo Argentino,argentine-dogo-1.jpg
+1137,Dandie Dinmont Terrier,dandie-dinmont-terrier-1.jpg
+1138,Dutch Shepherd Dog,
+1139,Double Doodle,
+1140,Deutsche Bracke,
+1141,Dorkie,
+1142,Danish-Swedish Farmdog,
+1143,Dingo,
+1144,Dutch Smoushond,
+1145,Drentse Patrijshond,
+1146,Drever,
+1147,Dunker,
+1148,Dorgi,
+1149,English Springer Spaniel,english-springer-spaniel-1.jpg
+1150,English Cocker Spaniel,english-cocker-spaniel-1.jpg
+1151,English Setter,english-setter-1.jpg
+1152,English Toy Spaniel,english-toy-spaniel-1.jpg
+1153,Entlebucher Mountain Dog,entlebucher-mountain-dog-1.jpg
+1154,English Foxhound,english-foxhound-1.jpg
+1155,East-European Shepherd,
+1156,English Shepherd,
+1157,Eurasier,
+1158,East Siberian Laika,
+1159,French Bulldog,french-bulldog-1.jpg
+1160,Flat-Coated Retriever,flat-coated-retriever-1.jpg
+1161,Field Spaniel,field-spaniel-1.jpg
+1162,Finnish Lapphund,finnish-lapphund-1.jpg
+1163,Finnish Spitz,finnish-spitz-1.jpg
+1164,Fila Brasileiro,
+1165,French Spaniel,
+1166,Finnish Hound,
+1167,Francais Blanc et Noir,
+1168,German Shepherd,german-shepherd-dog-1.jpg
+1169,Golden Retriever,golden-retriever-1.jpg
+1170,German Shorthaired Pointer,german-shorthaired-pointer-1.jpg
+1171,Great Dane,great-dane-1.jpg
+1172,German Wirehaired Pointer,german-wirehaired-pointer-1.jpg
+1173,Giant Schnauzer,giant-schnauzer-1.jpg
+1174,Great Pyrenees,great-pyrenees-1.jpg
+1175,Greater Swiss Mountain Dog,greater-swiss-mountain-dog-1.jpg
+1176,Gordon Setter,gordon-setter-1.jpg
+1177,German Pinscher,german-pinscher-1.jpg
+1178,Greyhound,greyhound-1.jpg
+1179,Glen of Imaal Terrier,glen-of-imaal-terrier-1.jpg
+1180,Grand Basset Griffon Vendeen,grand-basset-griffon-vendeen-1.jpg
+1181,Goldendoodle,
+1182,German Longhaired Pointer,
+1183,Greenland Dog,
+1184,Griffon bleu de Gascogne,
+1185,Grand Bleu de Gascogne,
+1186,Havanese,havanese-1.jpg
+1187,Harrier,harrier-dog-1.jpg
+1188,Hokkaido Dog,
+1189,Hovawart,
+1190,Hamilton Hound,
+1191,Italian Greyhound,italian-greyhound-1.jpg
+1192,Irish Wolfhound,irish-wolfhound-1.jpg
+1193,Irish Setter,irish-setter-1.jpg
+1194,Irish Terrier,irish-terrier-1.jpg
+1195,Icelandic Sheepdog,icelandic-sheepdog-1.jpg
+1196,Irish Red and White Setter,irish-red-and-white-setter-1.jpg
+1197,Ibizan Hound,ibizan-hound-1.jpg
+1198,Irish Water Spaniel,irish-water-spaniel-1.jpg
+1199,Jack Russell Terrier,jack-russell-terrier-1.jpg
+1200,Japanese Chin,japanese-chin-1.jpg
+1201,Japanese Spitz,
+1202,Jagdterrier,
+1203,Japanese Terrier,
+1204,Jämthund,
+1205,Keeshond,keeshond-1.jpg
+1206,Kerry Blue Terrier,kerry-blue-terrier-1.jpg
+1207,Kooikerhondje,kooikerhondje-1.jpg
+1208,Kuvasz,kuvasz-1.jpg
+1209,Komondor,komondor-1.jpg
+1210,Korean Jindo,
+1211,Karelian Bear Dog,
+1212,Kishu Ken,
+1213,Koolie,
+1214,Kromfohrlander,
+1215,Kangal Dog,
+1216,King Shepherd,
+1217,Kyi-Leo,
+1218,Karst Shepherd,
+1219,Labrador Retriever,labrador-retriever-1.jpg
+1220,Lhasa Apso,lhasa-apso-1.jpg
+1221,Lagotto Romagnolo,lagotto-romagnolo-1.jpg
+1222,Leonberger,leonberger-1.jpg
+1223,Lakeland Terrier,lakeland-terrier-1.jpg
+1224,Lowchen,lowchen-1.jpg
+1225,Large Munsterlander,
+1226,Lancashire Heeler,
+1227,Landseer,
+1228,Lucas Terrier,
+1229,Lurcher,
+1230,Lapponian Herder,
+1231,Miniature Schnauzer,miniature-schnauzer-1.jpg
+1232,Miniature American Shepherd,miniature-american-shepherd-1.jpg
+1233,Mastiff,mastiff-1.jpg
+1234,Maltese,maltese-1.jpg
+1235,Miniature Pinscher,miniature-pinscher-1.jpg
+1236,Miniature Bull Terrier,bull-terrier-miniature-1.jpg
+1237,Manchester Terrier,manchester-terrier-1.jpg
+1238,Miniature Bulldog,
+1239,Miniature Poodle,
+1240,Miniature Shar Pei,
+1241,McNab,
+1242,Mudi,
+1243,Mountain Feist,
+1244,Maremma Sheepdog,
+1245,Mal-Shi,
+1246,Moscow Watchdog,
+1247,Mountain Cur,
+1248,Majestic Tree Hound,
+1249,Newfoundland,newfoundland-1.jpg
+1250,Nova Scotia Duck Tolling Retriever,tolling-retriever-1.jpg
+1251,Norwegian Elkhound,norwegian-elkhound-1.jpg
+1252,Neapolitan Mastiff,neapolitan-mastiff-1.jpg
+1253,Norwich Terrier,norwich-terrier-1.jpg
+1254,Norfolk Terrier,norfolk-terrier-1.jpg
+1255,Norwegian Buhund,norwegian-buhund-1.jpg
+1256,Norwegian Lundehund,norwegian-lundehund-1.jpg
+1257,Norrbottenspets,
+1258,Northern Inuit Dog,
+1259,New Guinea Singing Dog,
+1260,Old English Sheepdog,old-english-sheepdog-1.jpg
+1261,Otterhound,otterhound-1.jpg
+1262,Olde English Bulldogge,
+1263,Poodle,poodle-1.jpg
+1264,Pembroke Welsh Corgi,pembroke-welsh-corgi-1.jpg
+1265,Pomeranian,pomeranian-1.jpg
+1266,Pug,pug-1.jpg
+1267,Portuguese Water Dog,portuguese-water-dog-1.jpg
+1268,Papillon,papillon-dog-1.jpg
+1269,Pekingese,pekingese-1.jpg
+1270,Parson Russell Terrier,parson-russell-terrier-1.jpg
+1271,Pointer,english-pointer-1.jpg
+1272,Puli,puli-1.jpg
+1273,Pumi,pumi-1.jpg
+1274,Portuguese Podengo Pequeno,portuguese-podengo-1.jpg
+1275,Petit Basset Griffon Vendeen,pbgv-1.jpg
+1276,Plott Hound,plott-hound-1.jpg
+1277,Polish Lowland Sheepdog,polish-lowland-sheepdog-1.jpg
+1278,Pharaoh Hound,pharaoh-hound-1.jpg
+1279,Pyrenean Shepherd,pyrenean-shepherd-1.jpg
+1280,Pakistani Mastiff,
+1281,Patterdale Terrier,
+1282,Perro de Presa Canario,
+1283,Perro de Presa Mallorquin,
+1284,Peruvian Inca Orchid,
+1285,Picardy Spaniel,
+1286,Prazsky Krysarik,
+1287,Pont-Audemer Spaniel,
+1288,Pyrenean Mastiff,
+1289,Polish Tatra Sheepdog,
+1290,Puggle,
+1291,Pudelpointer,
+1292,Plummer Terrier,
+1293,Portuguese Pointer,
+1294,Polish Hunting Dog,
+1295,Rottweiler,rottweiler-1.jpg
+1296,Rhodesian Ridgeback,rhodesian-ridgeback-1.jpg
+1297,Rat Terrier,rat-terrier-1.jpg
+1298,Redbone Coonhound,redbone-coonhound-1.jpg
+1299,Russian Toy,
+1300,Russian Spaniel,
+1301,Russian Tsvetnaya Bolonka,
+1302,Romanian Mioritic Shepherd Dog,
+1303,Rajapalayam dog,
+1304,Rafeiro do Alentejo,
+1305,Siberian Husky,siberian-husky-1.jpg
+1306,Shih Tzu,shih-tzu-1.jpg
+1307,Shetland Sheepdog,shetland-sheepdog-1.jpg
+1308,Shiba Inu,shiba-inu-1.jpg
+1309,St. Bernard,st-bernard-1.jpg
+1310,Samoyed,samoyed-1.jpg
+1311,Scottish Terrier,scottish-terrier-1.jpg
+1312,Soft Coated Wheaten Terrier,wheaten-1.jpg
+1313,Shar-Pei,shar-pei-1.jpg
+1314,Staffordshire Bull Terrier,staff-1.jpg
+1315,Standard Schnauzer,standard-schnauzer-1.jpg
+1316,Silky Terrier,australian-silky-terrier-1.jpg
+1317,Spinone Italiano,spinone-italiano-1.jpg
+1318,Schipperke,schipperke-1.jpg
+1319,Smooth Fox Terrier,smooth-fox-terrier-1.jpg
+1320,Saluki,saluki-1.jpg
+1321,Swedish Vallhund,swedish-vallhund-1.jpg
+1322,Sealyham Terrier,sealyham-terrier-1.jpg
+1323,Spanish Water Dog,spanish-water-dog-1.jpg
+1324,Scottish Deerhound,scottish-deerhound-1.jpg
+1325,Sussex Spaniel,sussex-spaniel-1.jpg
+1326,Skye Terrier,skye-terrier-1.jpg
+1327,Sloughi,sloughi-1.jpg
+1328,Small Munsterlander,
+1329,Saarloos wolfdog,
+1330,Sarplaninac,
+1331,Schapendoes,
+1332,Shikoku dog,
+1333,Shiloh Shepherd dog,
+1334,Silken Windhound,
+1335,Spanish Mastiff,
+1336,Swedish Lapphund,
+1337,Shichon,
+1338,Slovensky Cuvac,
+1339,Stabyhoun,
+1340,Spanish Greyhound,
+1341,Seppala Siberian Sleddog,
+1342,South Russian Ovcharka,
+1343,Sapsali,
+1344,Smaland Hound,
+1345,Serbian Hound,
+1346,Tibetan Terrier,tibetan-terrier-1.jpg
+1347,Toy Fox Terrier,toy-fox-terrier-1.jpg
+1348,Tibetan Spaniel,tibetan-spaniel-1.jpg
+1349,Tibetan Mastiff,tibetan-mastiff-1.jpg
+1350,Treeing Walker Coonhound,treeing-walker-coonhound-1.jpg
+1351,Toy Poodle,
+1352,Tamaskan Dog,
+1353,Thai Ridgeback,
+1354,Tosa Ken,
+1355,Texas Heeler,
+1356,Tornjak,
+1357,Taco Terrier,
+1358,Thai Bangkaew Dog,
+1359,Transylvanian Hound,
+1360,Vizsla,"vizsla-1.jpg"" alt=""Vizsla"
+1361,Volpino Italiano,
+1362,Weimaraner,weimaraner-1.jpg
+1363,West Highland White Terrier,west-highland-white-terrier-1.jpg
+1364,Whippet,whippet-1.jpg
+1365,Wirehaired Pointing Griffon,wirehaired-pointing-griffon-1.jpg
+1366,Wire Fox Terrier,fox-terrier-1.jpg
+1367,Welsh Terrier,welsh-terrier-1.jpg
+1368,Welsh Springer Spaniel,welsh-springer-spaniel-1.jpg
+1369,Wirehaired Vizsla,wirehaired-vizsla-1.jpg
+1370,West Siberian Laika,
+1371,Wetterhoun,
+1372,Xoloitzcuintli,xoloitzcuintle-1.jpg
+1373,Yorkshire Terrier,yorkshire-terrier-1.jpg Terrier
