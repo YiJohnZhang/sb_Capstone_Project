@@ -1,7 +1,10 @@
 from flask import Flask;
 from flask import request, render_template, redirect, url_for, flash;
+from sqlalchemy.exc import IntegrityError, NoResultFound;
+    # attempt to re-enter a unique constraint, on result found for admin attempt
 from models import db, connectDatabase, 
-from forms import LoginForm, RegisterForm, AddEditPetForm, 
+from forms import LoginForm, RegisterForm, AddEditPetForm;
+
 
 from flask_debugtoolbar import DebugToolbarExtension;
 import os;

@@ -5,7 +5,7 @@ from models import Pet, PetSpecie, CoatDescription, Color, Breed, PrimaryBreedTa
 
 with open('seed/seed_user_list.csv') as userList:
     db.session.bulk_insert_mappings(User, DictReader(userList));
-    # not yet completed
+    # generated a random dummy dataset
 
 with open('seed/seed_role_list.csv') as roleList:
     db.session.bulk_insert_mappings(Role, DictReader(roleList));
@@ -33,9 +33,5 @@ with open('seed/seed_breed_list.csv') as breedList:
 with open('seed/seed_primaryBreed_list.csv') as primaryBreedTable:
     db.session.bulk_insert_mappings(PrimaryBreedTable, DictReader(primaryBreedTable));
     # JOIN: not yet completed
-
-with open('seed/seed_secondaryBreed_list.csv') as secondaryBreedTable:
-    db.session.bulk_insert_mappings(SecondaryBreedTable, DictReader(secondaryBreedTable));
-    # JOIN: not yet completed
-
+    
 db.session.commit();

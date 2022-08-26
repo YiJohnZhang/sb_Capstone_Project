@@ -91,12 +91,13 @@ class User(db.Model):
 
     def deleteUser(self):
         '''Delete the user. Delete the record from the table.'''
+        # Todo.
         
-        dangerousConfirmation = User.
+        # dangerousConfirmation = User.;
 
-        if dangerousConfirmation:
-            db.session.delete(self);
-            db.session.commit();
+        # if dangerousConfirmation:
+        #     db.session.delete(self);
+        #     db.session.commit();
         
         return;
 
@@ -106,11 +107,20 @@ class User(db.Model):
     def returnAllUsers(cls):
         ''''''
 
-        return;
+        return cls.query.all();
 
     @classmethod
     def deleteUserByUsername(cls, username):
         ''''''
+
+        selectedUser = db.session.get_or_404(username);
+
+        cls.userNotFound(selectedUser);
+
+        if not selectedUser:
+
+        # confirmation logic in routes
+        db.session.query()
         
         return;
     
@@ -149,6 +159,9 @@ class Pet(db.Model):
     # seeded, injected, and api_created
     
     __tablename__ = 'pet';
+
+    id = db.column(db.BigInteger, autoincrement = True, primary_key = True);
+        # Todo.
     pass;
 
 class PetUserJoin(db.Model):
@@ -161,8 +174,7 @@ class PetUserJoin(db.Model):
 
     userReference = db.relationship('User', backref=db.backref('userJoinAlias', cascade='all, delete'));
     petReference = db.relationship('Pet', backref=db.backref('petJoinAlias', cascade='all, delete'));
-
-        # no through
+        # Todo: through relationship unnecessary?
 
     def __repr__(self):
         '''Self-representation for a PetUserJoin instance.'''
@@ -255,7 +267,35 @@ class Breed(db.Model):
         return f'<Breed {self.id}: {self.breed_name}>';
 
 class PrimaryBreedTable(db.Model):
-    pass;
+    # seeded, injected, and api_created
 
-class SecondaryBreedTable(db.Model):
-    pass;
+    __tablename__ = 'primarybreed_join';
+    
+    pet_id = db.Column(db.BigInteger, db.ForeignKey(Pet.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
+    breed_id = db.Column(db.SmallInteger, db.ForeignKey(Breed.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
+
+    petReference = db.relationship('Pet', backref=db.backref('petJoinAlias', cascade='all, delete'));
+    primaryBreedReference = db.relationship('Breed', backref=db.backref('primaryBreedJoinAlias', cascade='all, delete'));
+
+    def __repr__(self):
+        '''Self-representation for a Pet-Breed Join instance.'''
+        return f'<PrimaryBreedTable {self.pet_id}: {self.breed_id}>';
+
+    @classmethod
+    def createBreedJoinEntry(cls, requestData):
+        # Todo.
+        
+        # if breed == none, set to unknown
+
+        return;
+    
+    @classmethod
+    def updateBreedEntry(self):
+        ''''''
+        # Todo.
+        return;
+
+    def resetBreedEntry(self):
+        ''''''
+        # Todo.
+        return;
