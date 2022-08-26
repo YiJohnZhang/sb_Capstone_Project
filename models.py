@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy;
 from flask_bcrypt import Bcrypt;
+from datetime import datetime;              # timestamp for datetime.utcnow
 
 db = SQLAlchemy();
 bcrypt = Bcrypt();
@@ -162,6 +163,8 @@ class Pet(db.Model):
 
     id = db.column(db.BigInteger, autoincrement = True, primary_key = True);
         # Todo.
+
+        datetime.utcnow();
     pass;
 
 class PetUserJoin(db.Model):
