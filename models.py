@@ -27,7 +27,8 @@ class User(db.Model):
     email = db.Column(db.Text, nullable = False);
     description = db.Column(db.Text, nullable = True);
         # limit to 512 in Form
-    is_elevated = db.Column(db.Boolean, nullable = False, default = False); # do not show on `forms.py` to register
+    image_url = db.Column(db.Text, nullable = False, default='_defaultUser.jpg')
+    is_elevated = db.Column(db.Boolean, nullable = False, default = False, server_default='false'); # do not show on `forms.py` to register
 
     # insert foreignkey rel, roletable
 
@@ -36,7 +37,7 @@ class User(db.Model):
         return f'<User {self.username}: {self.first_name}>';
     
     @classmethod
-    def cleanRequestData(cls, requestData):
+    def cleanRequestData(cls, requestData, method='CreateUser'):
         '''Clean request data.'''
 
         mutableRequestData = dict(requestData);
@@ -44,15 +45,12 @@ class User(db.Model):
         if mutableRequestData.get('csrf_token'):
             mutableRequestData.pop('csrf_token');
 
-        return mutableRequestData;
-    
-    @classmethod
-    def hashString(cls, stringToHash):
-        '''Return utf-8 hash of a string, such as a password.'''
+        if method == 'EditUser':
+            mutableRequestData.pop('username');
+            mutableRequestData.pop('email');
+            mutableRequestData.pop('password');
 
-        hashedString = bcrypt.generate_password_hash(stringToHash);
-        return hashedString.decode('utf-8');
-            # utf8_hashedString
+        return mutableRequestData;
 
     @classmethod
     def returnUserbyUsername(cls, username):
@@ -66,6 +64,11 @@ class User(db.Model):
         '''Register a user. Create and insert a new User into the database.'''
 
         cleanedData = cls.cleanRequestData(requestData);
+
+        password = cleanedData.get('encrypted_password');
+        hashedPassword = bcrypt.generate_password_hash(password).decode('UTF-8');
+
+        cleanedData['encrypted_password'] = hashedPassword;
         
         db.session.add(cls(**cleanedData));
         db.session.commit();
@@ -86,8 +89,8 @@ class User(db.Model):
     def updateUser(self, requestData):
         '''Update the user object. Update an entry in User by primary key ("username").'''
 
-        cleanedData = User.cleanRequestData(requestData);
-
+        cleanedData = User.cleanRequestData(requestData, method='EditUser');
+            # check the password in `app.py`
         db.session.query(User).filter(User.username == self.username).update(cleanedData);
         db.session.commit();
         return;
@@ -122,10 +125,11 @@ class User(db.Model):
         cls.userNotFound(selectedUser);
 
         if not selectedUser:
-
+            
         # confirmation logic in routes
-        db.session.query()
-        
+        # db.session.query()
+            return;
+
         return;
     
     
@@ -147,8 +151,13 @@ class RoleTable(db.Model):
 
     __tablename__ = 'userrole_join';
 
-    user_username = db.Column(db.String(32), db.ForeignKey(User.username, ondelete='CASCADE', onupdate='CASCADE'));
-    role_id = db.Column(db.SmallInteger, db.ForeignKey(Role.id, ondelete='CASCADE', onupdate='CASCADE'));
+    user_username = db.Column(
+        db.String(32), 
+        db.ForeignKey(User.username, ondelete='CASCADE', onupdate='CASCADE'),
+        primary_key = True);
+    role_id = db.Column(db.SmallInteger, 
+        db.ForeignKey(Role.id, ondelete='CASCADE', onupdate='CASCADE'),
+        primary_key = True);
 
     userReference = db.relationship('User', backref=db.backref('userAlias', cascade='all, delete'));
     roleReference = db.relationship('Role', backref=db.backref('roleJoinAlias', cascade='all, delete'));
@@ -170,11 +179,53 @@ class Pet(db.Model):
         # limit the character in form (32)
     description = db.Column(db.Text, nullable = True);
         # limit the character in form (512)
-    photo_link = db.Column(db.Text, nullable = True, default = 'default_pet.png');
+    image_url = db.Column(db.Text, nullable = True, default = 'default_pet.png');
+    publish_time = db.Column(db.DateTime, nullable = False, default = datetime.utcnow());
+    gender = db.Column(db.Boolean, nullable = False);
+        # F => Female, T => Male,
+    sterilized = db.Column(db.Boolean, nullable = False);
+    estimated_age = db.Column(db.Integer, nullable = False, default = 0)
+    age_certainty = db.Column(db.Boolean, nullable = False, default = False);
+        # F => Unsure, T => Sure
+    weight = db.Column(db.Integer, nullable = False, default = 0);
+    pet_classification = db.Column(db.SmallInteger, db.ForeignKey());
+    coat_hair = db.Column(db.SmallInteger, db.ForeignKey());
+    coat_pattern = db.Column(db.SmallInteger, db.ForeignKey());
+    primary_light_shade = db.Column(db.SmallInteger, db.ForeignKey(), default = 0);
+    primary_dark_shade = db.Column(db.SmallInteger, db.ForeignKey(), default = 0);
+    trained = db.Column(db.Boolean, nullable = False, default = False);
+    medical_record_uptodate = db.Column(db.Boolean, nullable = False, default = False);
+    special_needs = db.Column(db.Text, nullable = True);
 
+    def __repr__(self):
+        '''Self-representation for a PetUserJoin instance.'''
+        return f'<Pet {self.id}: {self.pet_name}>';
+    
+    @classmethod
+    def cleanRequestData(cls, requestData):
+        '''Clean request data.'''
 
-        datetime.utcnow();
-    pass;
+        mutableRequestData = dict(requestData);
+
+        if mutableRequestData.get('csrf_token'):
+            mutableRequestData.pop('csrf_token');
+
+        return mutableRequestData;
+
+    @classmethod
+    def createPet(cls,requestData):
+        # Todo.
+        pass;
+
+    @classmethod
+    def updatePet(cls,requestData):
+        # Todo.
+        pass;
+    
+    def removePet(self):
+        # Todo. Requires authorization.
+        pass;
+
 
 class PetUserJoin(db.Model):
     # seeded and injected
@@ -272,7 +323,7 @@ class Breed(db.Model):
         # Dog Breeds: 1001 - 2000
         # Plants: 2001 - 3000 (really just: decorative tree, fruit tree, indoor non-tree, outdoor non-tree)
         # Birds, Amphibians, etc. are not given categorization
-    breed_name = db.Column(db.String(32), nullable = False);
+    breed_name = db.Column(db.Text, nullable = False);
     breed_image = db.Column(db.Text, nullable = True, default = 'default_pet.png');
 
     def __repr__(self):

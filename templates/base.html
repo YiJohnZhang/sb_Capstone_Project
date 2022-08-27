@@ -4,7 +4,7 @@
 <head>
     
     <meta charset="UTF-8">
-    <title>[Insert Capstone Project name]</title>
+    <title>PetSearch</title>
 
     <link rel="shortcut icon" href="/static/favicon.ico">  
 
@@ -19,7 +19,33 @@
 <body>
 
     <!-- Navigation -->
+    <div class="navbar navbar-expand">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a href="/" class="navbar-brand">
+              <img src="/static/images/default_pet.png" alt="logo">
+              <span>PetSearch</span>
+            </a>
+          </div>
+          <ul class="nav navbar-nav navbar-right">
 
+            <!-- {% if not g.user %}
+                <li><a href="/signup">Sign up</a></li>
+                <li><a href="/login">Log in</a></li>
+            {% else %}
+                <li>
+                <a href="/users/{{ g.user.id }}">
+                    <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
+                </a>
+                </li>
+                {% if g.user.is_elevated %}
+                    <li><a href="/edit">Edit Pets & Connected Users</a></li>
+                {% endif %}
+                <li><a href="/logout">Log out</a></li>
+            {% endif %} -->
+          </ul>
+        </div>
+      </div>
 
     <!-- Flash Messages -->
     <div>
@@ -31,9 +57,6 @@
     </div>
 
     {% block content %}
-
-        
-
     {% endblock content %}
 
     <script src="/static/scripts/script.js"></script>

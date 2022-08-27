@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+  <div class="home-hero">
+    <h1>PetSearch!</h1>
+    <p>Search pets available for adoption!</p>
+    <form action='/search' method='GET'>
+      
+      {% include 'form_base.html' %}
+
+    </form>
+    <button class="btn btn-primary btn-lg btn-block">Search Pets!</button>
+  </div>
+
+
+{% endblock content %}

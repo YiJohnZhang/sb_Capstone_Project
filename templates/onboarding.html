@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block body_class %}onboarding{% endblock %}
+
+{% block content %}
+
+  <div class="row justify-content-md-center">
+    <div class="col-md-7 col-lg-5">
+      <h2 class="join-message">
+          
+        {% if onboardingAction == 'signup' %}
+          Join Warbler today.
+        {% elif onboardingAction == 'login' %}
+          Welcome back.
+        {% elif onboardingAction == 'request' %}
+          Request a Rescue Agency account with us.
+        {% endif %}
+
+      </h2>
+
+      <form method="POST" id="">
+        
+        {% include 'form_base.html' %}
+
+        <button class="btn btn-primary btn-lg btn-block">
+          
+          {% if onboardingAction == 'signup' %}
+            Sign Up
+          {% elif onboardingAction == 'login' %}
+            Login
+          {% elif onboardingAction == 'request' %}
+            Request a Rescue Agency Account!
+          {% endif %}
+
+        </button>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}
