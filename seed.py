@@ -15,7 +15,6 @@ with open('seed/seed_userRoles_list.csv') as roleTableList:
 
 with open('seed/seed_pet_list.csv') as petList:
     db.session.bulk_insert_mappings(Pet, DictReader(petList));
-    # not yet completed
     
 with open('seed/seed_petSpecie_list.csv') as petSpecieList:
     db.session.bulk_insert_mappings(PetSpecie, DictReader(petSpecieList));
@@ -31,6 +30,5 @@ with open('seed/seed_breed_list.csv') as breedList:
 
 with open('seed/seed_primaryBreed_list.csv') as primaryBreedTable:
     db.session.bulk_insert_mappings(PrimaryBreedTable, DictReader(primaryBreedTable));
-    # JOIN: not yet completed
 
 db.session.commit();

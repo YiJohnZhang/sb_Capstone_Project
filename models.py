@@ -16,14 +16,17 @@ class User(db.Model):
     
     __tablename__ = 'users';
 
-    username = db.Column(db.String(32), nullable = False, unique = True, primary_key = True);
+    username = db.Column(db.Text, nullable = False, unique = True, primary_key = True);
+        # limit to 32 in Form
     encrypted_password = db.Column(db.Text, nullable = False);
     first_name = db.Column(db.Text, nullable = False);
         # if is_elevated, String(128), in `forms.py` make it Length(max=32) 
-    last_name = db.Column(db.String(32), nullable = True);
+    last_name = db.Column(db.Text, nullable = True);
+        # limit to 32 in Form
         # if is_elevated, it is Null, in `forms.py` make it InputRequired() because normal user cannot get elevated priviledges
     email = db.Column(db.Text, nullable = False);
-    description = db.Column(db.String(512), nullable = True);
+    description = db.Column(db.Text, nullable = True);
+        # limit to 512 in Form
     is_elevated = db.Column(db.Boolean, nullable = False, default = False); # do not show on `forms.py` to register
 
     # insert foreignkey rel, roletable
@@ -161,8 +164,14 @@ class Pet(db.Model):
     
     __tablename__ = 'pet';
 
-    id = db.column(db.BigInteger, autoincrement = True, primary_key = True);
+    id = db.Column(db.BigInteger, autoincrement = True, primary_key = True);
         # Todo.
+    pet_name = db.Column(db.Text, nullable = False);
+        # limit the character in form (32)
+    description = db.Column(db.Text, nullable = True);
+        # limit the character in form (512)
+    photo_link = db.Column(db.Text, nullable = True, default = 'default_pet.png');
+
 
         datetime.utcnow();
     pass;
@@ -253,6 +262,7 @@ class Color(db.Model):
 
 class Breed(db.Model):
     # seeded
+    # only enable this for "cats" and "dogs"
 
     __tablename__ = 'breed';
 
@@ -270,6 +280,7 @@ class Breed(db.Model):
         return f'<Breed {self.id}: {self.breed_name}>';
 
 class PrimaryBreedTable(db.Model):
+    '''Only for dogs and cats.'''
     # seeded, injected, and api_created
 
     __tablename__ = 'primarybreed_join';
