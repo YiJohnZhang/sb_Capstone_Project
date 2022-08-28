@@ -1,15 +1,11 @@
-{#
+{{ form.hidden_tag() }}
 
-    {{ form.hidden_tag() }}
-
-    {% for formField in form if formField.widget.input_type != 'hidden' %}
+{% for formField in form if formField.widget.input_type != 'hidden' %}
         
-        {% for error in formField.errors %}
-            <span class="text-danger">{{ error }}</span>
-        {% endfor %}
-        
-        {{ formField(placeholder=formField.label.text, class="form-control") }}
-    
+    {% for error in formField.errors %}
+        <span class="text-danger">{{ error }}</span>
     {% endfor %}
-
-#}
+        
+    {{ formField(placeholder=formField.label.text, class="form-control") }}
+    
+{% endfor %}

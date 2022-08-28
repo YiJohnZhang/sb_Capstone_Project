@@ -60,6 +60,10 @@ class User(db.Model):
         return userObject;
 
     @classmethod
+    def returnNumberOfUsers(cls):
+        return cls.query.count();
+    
+    @classmethod
     def createUser(cls, requestData):
         '''Register a user. Create and insert a new User into the database.'''
 
@@ -131,8 +135,7 @@ class User(db.Model):
             return;
 
         return;
-    
-    
+     
 class Role(db.Model):
     # seeded and db edit only.
 
@@ -166,92 +169,9 @@ class RoleTable(db.Model):
         '''Self-representation for a RoleTable instance.'''
         return f'<RoleTable {self.user_username}: {self.role_id}>';
 
-''' =============PET MODEL=============
-'''
-class Pet(db.Model):
-    # seeded, injected, and api_created
-    
-    __tablename__ = 'pet';
-
-    id = db.Column(db.BigInteger, autoincrement = True, primary_key = True);
-        # Todo.
-    pet_name = db.Column(db.Text, nullable = False);
-        # limit the character in form (32)
-    description = db.Column(db.Text, nullable = True);
-        # limit the character in form (512)
-    image_url = db.Column(db.Text, nullable = True, default = 'default_pet.png');
-    publish_time = db.Column(db.DateTime, nullable = False, default = datetime.utcnow());
-    gender = db.Column(db.Boolean, nullable = False);
-        # F => Female, T => Male,
-    sterilized = db.Column(db.Boolean, nullable = False);
-    estimated_age = db.Column(db.Integer, nullable = False, default = 0)
-    age_certainty = db.Column(db.Boolean, nullable = False, default = False);
-        # F => Unsure, T => Sure
-    weight = db.Column(db.Integer, nullable = False, default = 0);
-    pet_classification = db.Column(db.SmallInteger, db.ForeignKey());
-    coat_hair = db.Column(db.SmallInteger, db.ForeignKey());
-    coat_pattern = db.Column(db.SmallInteger, db.ForeignKey());
-    primary_light_shade = db.Column(db.SmallInteger, db.ForeignKey(), default = 0);
-    primary_dark_shade = db.Column(db.SmallInteger, db.ForeignKey(), default = 0);
-    trained = db.Column(db.Boolean, nullable = False, default = False);
-    medical_record_uptodate = db.Column(db.Boolean, nullable = False, default = False);
-    special_needs = db.Column(db.Text, nullable = True);
-
-    def __repr__(self):
-        '''Self-representation for a PetUserJoin instance.'''
-        return f'<Pet {self.id}: {self.pet_name}>';
-    
     @classmethod
-    def cleanRequestData(cls, requestData):
-        '''Clean request data.'''
-
-        mutableRequestData = dict(requestData);
-
-        if mutableRequestData.get('csrf_token'):
-            mutableRequestData.pop('csrf_token');
-
-        return mutableRequestData;
-
-    @classmethod
-    def createPet(cls,requestData):
-        # Todo.
-        pass;
-
-    @classmethod
-    def updatePet(cls,requestData):
-        # Todo.
-        pass;
-    
-    def removePet(self):
-        # Todo. Requires authorization.
-        pass;
-
-
-class PetUserJoin(db.Model):
-    # seeded and injected
-
-    __tablename__ = 'petuser_join';
-
-    user_id = db.Column(db.String(32), db.ForeignKey(User.username, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
-    pet_id = db.Column(db.BigInteger, db.ForeignKey(Pet.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
-
-    userReference = db.relationship('User', backref=db.backref('userJoinAlias', cascade='all, delete'));
-    petReference = db.relationship('Pet', backref=db.backref('petJoinAlias', cascade='all, delete'));
-        # Todo: through relationship unnecessary?
-
-    def __repr__(self):
-        '''Self-representation for a PetUserJoin instance.'''
-        return f'<Pet-User {self.pet_id}-{self.user_id}>';
-
-    @classmethod
-    def returnPetUserByPrimaryKey(cls, username, petID):
-        '''Probably unused but here by default.'''
-        return cls.query.get_or_404((username, petID));
-
-    @classmethod
-    def returnPetUserByUsername(cls, username):
-        '''Return all pets uploaded by a specified User.'''
-        return cls.query.filter(cls.user_id == username).all();
+    def returnNumberOfRescueOrganizations(cls):
+        return cls.query.filter_by(role_id = 2).count();
 
 ''' =============PET CATEGORIES=============
 '''
@@ -263,15 +183,17 @@ class PetSpecie(db.Model):
     id = db.Column(db.SmallInteger, primary_key = True);    # not smallserial
     specie_name = db.Column(db.String(16), nullable = False);
     specie_fa = db.Column(db.Text, nullable = False);
-        # 0-100 common_mammals:
-        #   0   dog (<i class="fa-duotone fa-dog"></i>)
-        #   1   cat (<i class="fa-solid fa-cat"></i>)
-        # 101 else
-        #   101 bird (<i class="fa-duotone fa-bird"></i>);
-        #   102 reptile (<i class="fa-duotone fa-snake"></i>); 
-        #   103 fish (<i class="fa-duotone fa-fish-fins"></i>)
-        #   104 amphibia (<i class="fa-duotone fa-frog"></i>)
-        #   999 plant ()
+    ''' Pet Specie IDs
+            #   0-100 common_mammals:
+                # 0   dog (<i class="fa-duotone fa-dog"></i>)
+                # 1   cat (<i class="fa-solid fa-cat"></i>)
+            #   > 101
+                # 101 bird (<i class="fa-duotone fa-bird"></i>);
+                # 102 reptile (<i class="fa-duotone fa-snake"></i>); 
+                # 103 fish (<i class="fa-duotone fa-fish-fins"></i>)
+                # 104 amphibia (<i class="fa-duotone fa-frog"></i>)
+                # 999 plant ()
+        '''
 
     def __repr__(self):
         '''Self-representation for a PetSpecie instance.'''
@@ -330,6 +252,108 @@ class Breed(db.Model):
         '''Self-representation for a Breed instance.'''
         return f'<Breed {self.id}: {self.breed_name}>';
 
+''' =============PET MODEL=============
+'''
+class Pet(db.Model):
+    # seeded, injected, and api_created
+    
+    __tablename__ = 'pet';
+
+    id = db.Column(db.BigInteger, autoincrement = True, primary_key = True);
+        # Todo.
+    pet_name = db.Column(db.Text, nullable = False);
+        # limit the character in form (32)
+    description = db.Column(db.Text, nullable = True);
+        # limit the character in form (512)
+    image_url = db.Column(db.Text, nullable = True, default = 'default_pet.png');
+    publish_time = db.Column(db.DateTime, nullable = False, default = datetime.utcnow());
+    gender = db.Column(db.Boolean, nullable = False);
+        # F => Female, T => Male,
+    sterilized = db.Column(db.Boolean, nullable = False);
+    estimated_age = db.Column(db.Integer, nullable = False, default = 0)
+    age_certainty = db.Column(db.Boolean, nullable = False, default = False);
+        # F => Unsure, T => Sure
+    weight = db.Column(db.Integer, nullable = False, default = 0);
+
+    pet_specie = db.Column(db.SmallInteger, 
+        db.ForeignKey(PetSpecie.id));
+    coat_hair = db.Column(db.SmallInteger, 
+        db.ForeignKey(CoatDescription.id));
+    coat_pattern = db.Column(db.SmallInteger, 
+        db.ForeignKey(CoatDescription.id));
+    primary_light_shade = db.Column(db.SmallInteger, 
+        db.ForeignKey(Color.id), default = 0);
+    primary_dark_shade = db.Column(db.SmallInteger, 
+        db.ForeignKey(Color.id), default = 0);
+
+    trained = db.Column(db.Boolean, nullable = False, default = False);
+    medical_record_uptodate = db.Column(db.Boolean, nullable = False, default = False);
+    special_needs = db.Column(db.Text, nullable = True);
+
+    petClassReference = db.relationship('PetSpecie', backref=db.backref('petBackReference'));
+    # coatDetailReference = db.relationship('CoatDescription', backref=db.backref('petBackReference'));
+    # colorReference = db.relationship('Color', backref=db.backref('petBackReference'));
+        # no reference for multiple
+
+    def __repr__(self):
+        '''Self-representation for a PetUserJoin instance.'''
+        return f'<Pet {self.id}: {self.pet_name}>';
+    
+    @classmethod
+    def cleanRequestData(cls, requestData):
+        '''Clean request data.'''
+
+        mutableRequestData = dict(requestData);
+
+        if mutableRequestData.get('csrf_token'):
+            mutableRequestData.pop('csrf_token');
+
+        return mutableRequestData;
+
+    @classmethod
+    def returnNumberOfPets(cls):
+        return cls.query.count();
+
+    @classmethod
+    def createPet(cls,requestData):
+        # Todo.
+        pass;
+
+    @classmethod
+    def updatePet(cls,requestData):
+        # Todo.
+        pass;
+
+    def removePet(self):
+        # Todo. Requires authorization.
+        pass;
+
+class PetUserJoin(db.Model):
+    # seeded and injected
+
+    __tablename__ = 'petuser_join';
+
+    user_username = db.Column(db.Text, db.ForeignKey(User.username, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
+    pet_id = db.Column(db.BigInteger, db.ForeignKey(Pet.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
+
+    userReference = db.relationship('User', backref=db.backref('userJoinAlias', cascade='all, delete'));
+    petReference = db.relationship('Pet', backref=db.backref('petJoinAlias', cascade='all, delete'));
+        # Todo: through relationship unnecessary?
+
+    def __repr__(self):
+        '''Self-representation for a PetUserJoin instance.'''
+        return f'<Pet-User {self.pet_id}-{self.user_id}>';
+
+    @classmethod
+    def returnPetUserByPrimaryKey(cls, username, petID):
+        '''Probably unused but here by default.'''
+        return cls.query.get_or_404((username, petID));
+
+    @classmethod
+    def returnPetUserByUsername(cls, username):
+        '''Return all pets uploaded by a specified User.'''
+        return cls.query.filter(cls.user_id == username).all();
+
 class PrimaryBreedTable(db.Model):
     '''Only for dogs and cats.'''
     # seeded, injected, and api_created
@@ -337,10 +361,9 @@ class PrimaryBreedTable(db.Model):
     __tablename__ = 'primarybreed_join';
     
     pet_id = db.Column(db.BigInteger, db.ForeignKey(Pet.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
-    breed_id = db.Column(db.SmallInteger, db.ForeignKey(Breed.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
+    breed_id = db.Column(db.SmallInteger, db.ForeignKey(Breed.id), primary_key = True);
 
-    petReference = db.relationship('Pet', backref=db.backref('petJoinAlias', cascade='all, delete'));
-    primaryBreedReference = db.relationship('Breed', backref=db.backref('primaryBreedJoinAlias', cascade='all, delete'));
+    petReference = db.relationship('Pet', backref=db.backref('petAlias', cascade='all, delete'));
 
     def __repr__(self):
         '''Self-representation for a Pet-Breed Join instance.'''

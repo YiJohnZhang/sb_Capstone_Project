@@ -5,12 +5,10 @@
 
   <div class="home-hero">
     <h1>PetSearch!</h1>
-    <p>Search pets available for adoption!</p>
-    <form action='/search' method='GET'>
+    <p>Join {{statistics.users}} users searching for {{statistics.pets}} pets for adoption by {{statistics.rescueOrganizations}} rescue organizations!</p>
       
-      {% include 'form_base.html' %}
+    {% include 'form_search.html' %}
 
-    </form>
     <button class="btn btn-primary btn-lg btn-block">Search Pets!</button>
   </div>
 

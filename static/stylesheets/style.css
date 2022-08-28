@@ -1,0 +1,18 @@
+
+
+
+#navbar{
+    height:100px;
+}
+    #navbar table, #navbar tr{
+        width: 100%;
+    }
+    #navbar td{
+        text-align: center;
+    }
+        .navbar-td-empty{
+            width:20%;
+        }
+    #logo{
+        max-height:100px;
+    }

@@ -2,6 +2,10 @@ from csv import DictReader;
 from app import db;
 from models import User, Role, RoleTable;
 from models import Pet, PetSpecie, CoatDescription, Color, Breed, PrimaryBreedTable;
+from models import PetUserJoin;
+
+db.drop_all();
+db.create_all();
 
 with open('seed/seed_user_list.csv') as userList:
 
@@ -21,24 +25,7 @@ with open('seed/seed_role_list.csv') as roleList:
 
 with open('seed/seed_userRoles_list.csv') as roleTableList:
     db.session.bulk_insert_mappings(RoleTable, DictReader(roleTableList));
-
-with open('seed/seed_pet_list.csv') as petList:
-
-    rowArray = [];
-
-    reader = DictReader(petList)
-    for row in reader:
-        row['gender'] = bool(row['gender']);
-            # See Line 13 Comment
-        row['sterilized'] = bool(row['sterilized']);
-        row['age_certainty'] = bool(row['age_certainty']);
-        row['trained'] = bool(row['trained']);
-        row['medical_records_uptodate'] = bool(row['medical_records_uptodate']);
-            
-        rowArray.append(row);
-
-    db.session.bulk_insert_mappings(Pet, rowArray);
-    
+   
 with open('seed/seed_petSpecie_list.csv') as petSpecieList:
     db.session.bulk_insert_mappings(PetSpecie, DictReader(petSpecieList));
 
@@ -51,7 +38,28 @@ with open('seed/seed_petColor_list.csv') as colorsList:
 with open('seed/seed_petBreed_list.csv') as breedList:
     db.session.bulk_insert_mappings(Breed, DictReader(breedList));
 
-with open('seed/seed_primaryBreed_list.csv') as primaryBreedTable:
-    db.session.bulk_insert_mappings(PrimaryBreedTable, DictReader(primaryBreedTable));
+with open('seed/seed_pet_list.csv') as petList:
+
+    rowArray = [];
+
+    reader = DictReader(petList)
+    for row in reader:
+        row['gender'] = bool(row['gender']);
+            # See Line 13 Comment
+        row['sterilized'] = bool(row['sterilized']);
+        row['age_certainty'] = bool(row['age_certainty']);
+        row['pet_specie'] = int(row['pet_specie']);
+        row['trained'] = bool(row['trained']);
+        row['medical_records_uptodate'] = bool(row['medical_records_uptodate']);
+            
+        rowArray.append(row);
+
+    db.session.bulk_insert_mappings(Pet, rowArray);
+
+with open('seed/seed_primaryBreed_list.csv') as primaryBreedList:
+    db.session.bulk_insert_mappings(PrimaryBreedTable, DictReader(primaryBreedList));
+
+with open('seed/seed_petUser_list.csv') as petUserList:
+    db.session.bulk_insert_mappings(PetUserJoin, DictReader(petUserList));
 
 db.session.commit();

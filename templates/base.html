@@ -12,40 +12,41 @@
     <script src="https://unpkg.com/jquery"></script>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-    <link rel="stylesheet" href="/static/stylesheets/style.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/style.css')}}">
 
 </head>
 
 <body>
 
     <!-- Navigation -->
-    <div class="navbar navbar-expand">
-        <div class="container-fluid">
-          <div class="navbar-header">
+    <div id="navbar" class="container-fluid ">
+      <table>
+        <tr>
+          <td>
             <a href="/" class="navbar-brand">
-              <img src="/static/images/default_pet.png" alt="logo">
-              <span>PetSearch</span>
+              <img id='logo' src="{{url_for('static', filename='favicon.ico')}}" alt="PetSearch logo">
             </a>
-          </div>
-          <ul class="nav navbar-nav navbar-right">
-
-            <!-- {% if not g.user %}
-                <li><a href="/signup">Sign up</a></li>
-                <li><a href="/login">Log in</a></li>
+          </td>
+          <td class="navbar-td-empty"></td>
+          {% if not g.user %}
+            <td class="navbar-td-empty"></td>
+            <td><a href="/signup">Sign up</a></td>
+            <td><a href="/login">Log in</a></td>
+          {% else %}
+            {% if g.user.is_elevated %}
+              <td><a href="/edit">Administrator Operations</a></td>
             {% else %}
-                <li>
-                <a href="/users/{{ g.user.id }}">
-                    <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
-                </a>
-                </li>
-                {% if g.user.is_elevated %}
-                    <li><a href="/edit">Edit Pets & Connected Users</a></li>
-                {% endif %}
-                <li><a href="/logout">Log out</a></li>
-            {% endif %} -->
-          </ul>
-        </div>
-      </div>
+              <td class="navbar-td-empty"></td>
+            {% endif %}
+            <td>
+              <a href="/users/{{ g.user.id }}">
+                <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
+              </a>
+            </td>
+            <td><a href="/logout">Log out</a></td>
+          {% endif %}
+        </tr>
+      </table>
 
     <!-- Flash Messages -->
     <div>
