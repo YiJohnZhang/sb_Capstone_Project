@@ -1,11 +1,13 @@
+import json
 from flask import Flask;
-from flask import request, session, g, render_template, redirect, url_for, flash;
+from flask import request, session, g, jsonify, render_template, redirect, url_for, flash, abort;
 from sqlalchemy.exc import IntegrityError;
     # attempt to re-enter a unique constraint, on result found for admin attempt
 from models import db, connectDatabase;
 from models import User, Pet;
 from models import RoleTable, PetUserJoin, Breed, PetSpecie, CoatDescription, Color;
 from forms import LoginForm, RegisterForm, AddEditPetForm, SearchPetForm;
+    # add favoritepet?
 from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
 
@@ -16,6 +18,10 @@ import os;
 # Constants
 CURRENT_USER_KEY = "currentUser";
 RETURN_PAGE_KEY = "previousPage";
+
+# Search Constants
+DEFAULT_CHOICE_TUPLE = (0, 'All');
+
 
 app = Flask(__name__);
 
@@ -36,10 +42,10 @@ db.create_all();
 
 
 '''HELPER FUNCTIONS'''
-def login(user):
+def login(userObject):
     """Log in user."""
 
-    session[CURRENT_USER_KEY] = user.id;
+    session[CURRENT_USER_KEY] = userObject.id;
 
 def logout():
     """Logout user."""
@@ -58,6 +64,15 @@ def logout():
     req.headers['Cache-Control'] = 'public, max-age=0'
     return req
 
+def authenticate(username):
+    '''Authenticate that the user in session is the same.'''
+
+    if g.user == User.returnUserbyUsername(username):
+        return True;
+
+    return abort(403);
+
+
 def populatePetFormSelectFields(petForm):
     '''Populates form selection choices to create, edit, and search pet.'''
 
@@ -72,8 +87,6 @@ def populatePetFormSelectFields(petForm):
     # primary_light_shade = SelectField('Primary Light Shade', validators=[InputRequired()], coerce=int);
     # primary_dark_shade = SelectField('Primary Dark Shade', validators=[InputRequired()], coerce=int);
 
-    DEFAULT_CHOICE_TUPLE = (0, 'All');
-
     # Pet Specie
     petSpecieChoices = [DEFAULT_CHOICE_TUPLE];
     databasePetSpecies = PetSpecie.returnAllSpecies();
@@ -87,9 +100,9 @@ def populatePetFormSelectFields(petForm):
 
     # Pet Breed
     petBreedChoices = [DEFAULT_CHOICE_TUPLE];
-    databaseBreedTypes = Breed.returnAllBreeds();
-    for databaseBreedType in databaseBreedTypes:
-        petBreedChoices.append((databaseBreedType.id, databaseBreedType.breed_name));
+    # databaseBreedTypes = Breed.returnAllBreeds();
+    # for databaseBreedType in databaseBreedTypes:
+    #     petBreedChoices.append((databaseBreedType.id, databaseBreedType.breed_name));
 
     petForm.primary_breed.choices = petBreedChoices;
 
@@ -258,12 +271,15 @@ def error_403(error):
     '''403: Forbidden View'''
     return render_template('errors/error.html', errorCode = 403, previousPath = session[RETURN_PAGE_KEY]), 403;
 
-# Helper Decorators
+# Other Decorators
 
 
 
 
-# Routes
+'''ROUTES'''
+''' Public Routes
+'''
+# General Public Routes
 @app.route('/')
 def indexView():
 
@@ -279,3 +295,91 @@ def indexView():
         form = searchPetForm, displayFormLabel = True, 
         statistics=statistics);
 
+# General Public Exclusive Routes
+@notLoginRequired_decorator
+def loginView():
+
+    return redirect(url_for('indexView'));
+
+@notLoginRequired_decorator
+def registerView():
+    # create user
+    return redirect(url_for('indexView'));
+
+''' Private Routes
+'''
+# General Private Routes
+@loginRequired_decorator
+@app.route('/logout')
+def logoutView():
+    logout();
+    return redirect(url_for('indexView'));
+
+# User Routes
+@app.route('/user/<username>')
+def userView(username):
+
+
+
+    return username;
+
+@loginRequired_decorator
+@app.route('/user/<username>/edit', methods=['GET', 'POST'])
+def editUserView(username):
+    return;
+
+# Restricted Routes
+@loginRequired_decorator
+@adminAction_decorator
+@app.route('/edit/<username>')
+def editUsernameDatabase(username):
+    return;
+
+@loginRequired_decorator
+@adminAction_decorator
+@app.route('/edit/<username>/addpet')
+def addPetView(username):
+    return;
+
+@loginRequired_decorator
+@adminAction_decorator
+@app.route('/pet/<int:petID>/edit')
+def editPetView(petID):
+    # match username to pet to authorize
+    return;
+
+# for admins, they can edit users except for other admins.
+
+
+
+# tease with messages.
+
+''' API Routes
+'''
+@app.route('/api/breeds/<int:petSpecieID>')
+def fetchPetBreeds(petSpecieID):
+
+    validPetBreeds = [];
+    validPetBreeds.append({'id': DEFAULT_CHOICE_TUPLE[0], 'breed_name': DEFAULT_CHOICE_TUPLE[1]});
+        # key is the text to dispaly, value is the option value because otherwise the reverse dict doesn't work (unless stringified)
+
+    petSpecieObject = PetSpecie.returnPetSpecieByID(petSpecieID);
+
+    if not petSpecieObject:
+        return abort(404);
+
+    if petSpecieID == 0 or petSpecieID >= 100:
+        return jsonify({'breeds': validPetBreeds});
+    
+    petQueryMapping = {
+        'Dog': Breed.returnAllDogBreeds(),
+        'Cat': Breed.returnAllCatBreeds()
+    };
+
+    petBreedQuery = petQueryMapping[f'{petSpecieObject.specie_name}'];
+
+    for petBreed in petBreedQuery:
+        validPetBreeds.append({'id':petBreed.id, 'breed_name':petBreed.breed_name});
+
+
+    return jsonify({'breeds': validPetBreeds});

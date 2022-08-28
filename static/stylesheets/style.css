@@ -21,3 +21,6 @@
         max-height:100px;
     }
 
+.petSpecie_input li{
+    display:inline;
+}

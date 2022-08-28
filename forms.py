@@ -117,7 +117,10 @@ class AddEditPetForm(FlaskForm):
             NumberRange(min=VALID_PET_WEIGHT[0], max=VALID_PET_WEIGHT[1], message=f'Valid Pet Age between: {VALID_PET_WEIGHT[0]} and {VALID_PET_WEIGHT[1]}')
         ]);
 
-    pet_specie = RadioField('Pet Classficiation', validators=[InputRequired()], coerce=int);
+    pet_specie = RadioField('Pet Classficiation', validators=[InputRequired()], coerce=int, 
+        render_kw={
+            'class':'petSpecie_input'
+        });
     primary_breed = SelectField('Pet Breed', validators=[InputRequired()], coerce=int);
         # null the selection in new pet logic (models.py) if the pet_classificatino is not dog or cat. doesn't need to be that polished.
         # manually set it to required if pet_classificatino is dog or cat.

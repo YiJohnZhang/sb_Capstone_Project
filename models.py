@@ -184,7 +184,7 @@ class PetSpecie(db.Model):
     specie_name = db.Column(db.String(16), nullable = False);
     specie_fa = db.Column(db.Text, nullable = False);
     ''' Pet Specie IDs
-            #   0-100 common_mammals:
+            #   1-100 common_mammals:
                 # 1   dog (<i class="fa-duotone fa-dog"></i>)
                 # 2   cat (<i class="fa-solid fa-cat"></i>)
             #   > 101
@@ -204,6 +204,11 @@ class PetSpecie(db.Model):
     def returnAllSpecies(cls):
         # no test
         return cls.query.all();
+    
+    @classmethod
+    def returnPetSpecieByID(cls, petSpecieID):
+        # no test
+        return cls.query.get_or_404(petSpecieID);
 
 class CoatDescription(db.Model):
     # seeded; parent model = Pet
@@ -283,6 +288,16 @@ class Breed(db.Model):
     def returnAllBreeds(cls):
         # no test
         return cls.query.all();
+    
+    @classmethod
+    def returnAllCatBreeds(cls):
+        # no test
+        return cls.query.filter(cls.id.between(1, 1000)).all();
+    
+    @classmethod
+    def returnAllDogBreeds(cls):
+        # no test
+        return cls.query.filter(cls.id.between(1001, 2000)).all();
 
 ''' =============PET MODEL=============
 '''
