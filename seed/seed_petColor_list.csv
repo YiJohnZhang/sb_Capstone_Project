@@ -1,10 +1,11 @@
 id,color_name,color_hex
-0,Not Available,#FFFFFF
-1,Gold,#AA6A3D
-2,Pale Yellow,#FEFFE9
-3,White,#FFFFFF
-4,Grey,#D0CED5
-101,Red,#A5461A
-102,Brown,#6F4D4E
-103,Black,#0F110B
-104,Blue,#46446B
+1,Not Applicable,#FFFFFF
+2,Gold,#AA6A3D
+3,Pale Yellow,#FEFFE9
+4,White,#FFFFFF
+5,Grey,#D0CED5
+101,Not Applicable,#FFFFFF
+102,Red,#A5461A
+103,Brown,#6F4D4E
+104,Black,#0F110B
+105,Blue,#46446B

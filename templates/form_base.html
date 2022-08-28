@@ -5,7 +5,16 @@
     {% for error in formField.errors %}
         <span class="text-danger">{{ error }}</span>
     {% endfor %}
-        
-    {{ formField(placeholder=formField.label.text, class="form-control") }}
     
+    {% if displayFormLabel %}
+
+        {{formField.label}}
+        {{formField}}
+
+    {% else %}
+
+        {{ formField(placeholder=formField.label.text, class="form-control") }}
+        
+    {% endif %}
+
 {% endfor %}

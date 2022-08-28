@@ -1,19 +1,20 @@
 id,coat_description
-0,Unknown
-1,Straight
-2,Mixed
-3,Curly
+1,Unknown
+2,Straight
+3,Mixed
+4,Curly
 5,Bald
-100,Solid
-101,Piebald (pied)
-102,Extreme Piebald
-103,Merle
-104,Tuxedo
-105,Harlequin
-106,Spotted
-107,"Flecked (Ticked, Speckled)"
-108,Brindle
-109,Saddle
-110,Sable
-111,Tabby
-112,Colorpoint
+100,Not Listed
+101,Solid
+102,Piebald (pied)
+103,Extreme Piebald
+104,Merle
+105,Tuxedo
+106,Harlequin
+107,Spotted
+108,"Flecked (Ticked, Speckled)"
+109,Brindle
+110,Saddle
+111,Sable
+112,Tabby
+113,Colorpoint

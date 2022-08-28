@@ -3,7 +3,8 @@ from flask import request, session, g, render_template, redirect, url_for, flash
 from sqlalchemy.exc import IntegrityError;
     # attempt to re-enter a unique constraint, on result found for admin attempt
 from models import db, connectDatabase;
-from models import User, RoleTable, Pet;
+from models import User, Pet;
+from models import RoleTable, PetUserJoin, Breed, PetSpecie, CoatDescription, Color;
 from forms import LoginForm, RegisterForm, AddEditPetForm, SearchPetForm;
 from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
@@ -71,19 +72,69 @@ def populatePetFormSelectFields(petForm):
     # primary_light_shade = SelectField('Primary Light Shade', validators=[InputRequired()], coerce=int);
     # primary_dark_shade = SelectField('Primary Dark Shade', validators=[InputRequired()], coerce=int);
 
-    petForm.pet_specie.choices = [];
-    petForm.primary_breed.choices = [];
-    petForm.coat_hair.choices = [];
-    petForm.coat_pattern.choices = [];
-    petForm.primary_light_shade.choices = [];
-    petForm.primary_dark_shade.choices = [];
+    DEFAULT_CHOICE_TUPLE = (0, 'All');
+
+    # Pet Specie
+    petSpecieChoices = [DEFAULT_CHOICE_TUPLE];
+    databasePetSpecies = PetSpecie.returnAllSpecies();
+    for specie in databasePetSpecies:
+        petSpecieChoices.append((specie.id, specie.specie_name));
+            # Otherwise Jinja yields 'too many values to unpack' error.
+
+    petForm.pet_specie.choices = petSpecieChoices;
+        # todo: make it inline
+        # todo: change to icons?
+
+    # Pet Breed
+    petBreedChoices = [DEFAULT_CHOICE_TUPLE];
+    databaseBreedTypes = Breed.returnAllBreeds();
+    for databaseBreedType in databaseBreedTypes:
+        petBreedChoices.append((databaseBreedType.id, databaseBreedType.breed_name));
+
+    petForm.primary_breed.choices = petBreedChoices;
+
+    
+    # Pet Coat, Hair Type
+    petHairChoices = [DEFAULT_CHOICE_TUPLE];
+    databaseHairTypes = CoatDescription.returnAllHairTypes();
+    for databaseHairType in databaseHairTypes:
+        petHairChoices.append((databaseHairType.id, databaseHairType.coat_description));
+
+    petForm.coat_hair.choices = petHairChoices;
+
+    # Pet Coat, Coat Type
+    petCoatChoices = [DEFAULT_CHOICE_TUPLE]; 
+    databaseCoatPatterns = CoatDescription.returnAllCoatTypes();
+    for databaseCoatPattern in databaseCoatPatterns:
+        petCoatChoices.append((databaseCoatPattern.id, databaseCoatPattern.coat_description));
+
+    petForm.coat_pattern.choices = petCoatChoices;
+
+    # Pet Color, Light
+    petLightColorChoices = [DEFAULT_CHOICE_TUPLE];
+    databaseLightPetColors = Color.returnAllLightColors();
+    for lightPetColor in databaseLightPetColors:
+        petLightColorChoices.append((lightPetColor.id, lightPetColor));
+        
+    petForm.primary_light_shade.choices = petLightColorChoices;
+
+    # Pet Color, Dark
+    petDarkColorChoices = [DEFAULT_CHOICE_TUPLE];
+    databaseDarkPetColors = Color.returnAllDarkColors();
+    for databaseDarkPetColor in databaseDarkPetColors:
+        petDarkColorChoices.append((databaseDarkPetColor.id, databaseDarkPetColor));
+        # darkPetColors.append([(color.id, color) for color in Color.returnAllDarkColors()]);
+            # Jinja yields 'too many values to unpack' error.
+    
+    petForm.primary_dark_shade.choices = petDarkColorChoices;
 
     return petForm;
 
 def returnSearchPetForm():
     '''Returns a search Pet form for the index and search views.'''
     
-    searchPetForm = SearchPetForm();
+    searchPetForm = SearchPetForm(meta={'csrf': False});
+        # disable csrf: https://stackoverflow.com/a/61052386
 
     # Remove unsearchable fields
     if searchPetForm.pet_name:
@@ -164,7 +215,6 @@ def after_request(req):
     req.headers['Cache-Control'] = 'public, max-age=0'
     return req
 
-
 # Authentication Decorators
 def loginRequired_decorator(f):
     @wraps(f)
@@ -226,6 +276,6 @@ def indexView():
     };
 
     return render_template('index.html',
-        form = searchPetForm,
+        form = searchPetForm, displayFormLabel = True, 
         statistics=statistics);
 

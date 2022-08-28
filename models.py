@@ -185,19 +185,25 @@ class PetSpecie(db.Model):
     specie_fa = db.Column(db.Text, nullable = False);
     ''' Pet Specie IDs
             #   0-100 common_mammals:
-                # 0   dog (<i class="fa-duotone fa-dog"></i>)
-                # 1   cat (<i class="fa-solid fa-cat"></i>)
+                # 1   dog (<i class="fa-duotone fa-dog"></i>)
+                # 2   cat (<i class="fa-solid fa-cat"></i>)
             #   > 101
                 # 101 bird (<i class="fa-duotone fa-bird"></i>);
                 # 102 reptile (<i class="fa-duotone fa-snake"></i>); 
                 # 103 fish (<i class="fa-duotone fa-fish-fins"></i>)
                 # 104 amphibia (<i class="fa-duotone fa-frog"></i>)
-                # 999 plant ()
+                # 998 plant ()
+                # 999 unknown
         '''
 
     def __repr__(self):
         '''Self-representation for a PetSpecie instance.'''
         return f'<PetSpecie {self.id}: {self.specie_name}>';
+    
+    @classmethod
+    def returnAllSpecies(cls):
+        # no test
+        return cls.query.all();
 
 class CoatDescription(db.Model):
     # seeded; parent model = Pet
@@ -206,16 +212,26 @@ class CoatDescription(db.Model):
     
     id = db.Column(db.SmallInteger, primary_key = True);    # smallint
     coat_description = db.Column(db.Text, nullable = False);
-        #   0: Unknown
-        #   1: Straight
-        #   2: Mixed
-        #   3: Curly
-        #   4: Bald
+        #   1: Unknown
+        #   2: Straight
+        #   3: Mixed
+        #   4: Curly
+        #   5: Bald
         #   Coat Patterns: 100+
 
     def __repr__(self):
         '''Self-representation for a CoatDescription instance.'''
         return f'<CoatDescription {self.id}: {self.coat_description}>';
+
+    @classmethod
+    def returnAllHairTypes(cls):
+        # no test
+        return cls.query.filter((cls.id.between(1, 100))).all();
+
+    @classmethod
+    def returnAllCoatTypes(cls):
+        # no test
+        return cls.query.filter((cls.id.between(101, 200))).all();
 
 class Color(db.Model):
     # seeded; parent model = Pet
@@ -223,15 +239,26 @@ class Color(db.Model):
     __tablename__ = 'color';
 
     id = db.Column(db.SmallInteger, primary_key = True);    # not smallserial
-        #   Null: 0
+        #   All (Search): 0
         #   Light Colors: 1 - 100
         #   Dark Colors: 101 - 200
+        #   Unknown: 999
     color_name = db.Column(db.String(16), nullable = False);
     color_hex = db.Column(db.String(7), nullable = False);
 
     def __repr__(self):
         '''Self-representation for a Color instance.'''
         return f'<Color {self.id}: {self.color_name} ({self.color_hex})>';
+
+    @classmethod
+    def returnAllLightColors(cls):
+        # no test
+        return cls.query.filter((cls.id.between(1, 100))).all();
+
+    @classmethod
+    def returnAllDarkColors(cls):
+        # no test
+        return cls.query.filter((cls.id.between(101, 200))).all();
 
 class Breed(db.Model):
     # seeded
@@ -240,7 +267,7 @@ class Breed(db.Model):
     __tablename__ = 'breed';
 
     id = db.Column(db.SmallInteger, primary_key = True);    # not smallserial
-        # Unknown: 0
+        # All (Search): 0
         # Cat Breeds: 1 - 1000
         # Dog Breeds: 1001 - 2000
         # Plants: 2001 - 3000 (really just: decorative tree, fruit tree, indoor non-tree, outdoor non-tree)
@@ -251,6 +278,11 @@ class Breed(db.Model):
     def __repr__(self):
         '''Self-representation for a Breed instance.'''
         return f'<Breed {self.id}: {self.breed_name}>';
+    
+    @classmethod
+    def returnAllBreeds(cls):
+        # no test
+        return cls.query.all();
 
 ''' =============PET MODEL=============
 '''
