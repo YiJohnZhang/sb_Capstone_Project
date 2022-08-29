@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block backgroundImage %}
+  style="background-image:url({{url_for('static', filename='paw_print_2160p.jpg')}})"
+{% endblock backgroundImage %}
+
 {% block body_class %}onboarding{% endblock %}
 
 {% block content %}

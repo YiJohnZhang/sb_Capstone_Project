@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>PetSearch</title>
 
-    <link rel="shortcut icon" href="/static/favicon.ico">  
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}">  
 
     <script src="https://unpkg.com/bootstrap"></script>
     <script src="https://unpkg.com/jquery"></script>
@@ -16,7 +16,7 @@
 
 </head>
 
-<body>
+<body {% block backgroundImage %}{% endblock backgroundImage %}>
 
     <!-- Navigation -->
     <div id="navbar" class="container-fluid ">
@@ -24,7 +24,7 @@
         <tr>
           <td>
             <a href="/" class="navbar-brand">
-              <img id='nav-logo' src="{{url_for('static', filename='imgs/default_pet.png')}}" alt="PetSearch logo">
+              <img id='nav-logo' src="{{url_for('static', filename='petsearch.png')}}" alt="PetSearch logo">
             </a>
           </td>
           <td class="navbar-td-empty"></td>

@@ -348,7 +348,7 @@ def petView(petID):
 
     petObject = Pet.returnPetByID(petID);
 
-    return petObject;
+    return petObject.pet_name;
 
 # General Public Exclusive Routes
 @app.route('/login', methods=['GET', 'POST'])
@@ -463,7 +463,7 @@ def userView(username):
 
     userObject = User.returnUserbyUsername(username);
 
-    return userObject;
+    return userObject.username;
 
 @app.route('/user/<username>/edit', methods=['GET', 'POST'])
 @loginRequired_decorator
