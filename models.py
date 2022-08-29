@@ -45,7 +45,9 @@ class User(db.Model):
         if mutableRequestData.get('csrf_token'):
             mutableRequestData.pop('csrf_token');
 
-        if method == 'EditUser':
+        if method == 'CreateUser':
+            mutableRequestData.pop('confirm_password');
+        elif method == 'EditUser':
             mutableRequestData.pop('username');
             mutableRequestData.pop('email');
             mutableRequestData.pop('password');
@@ -74,9 +76,11 @@ class User(db.Model):
 
         cleanedData['encrypted_password'] = hashedPassword;
         
-        db.session.add(cls(**cleanedData));
+        newUserObject = cls(**cleanedData);
+        db.session.add(newUserObject);
         db.session.commit();
-        return;
+
+        return newUserObject;
 
     @classmethod
     def authentication(cls, username, password):
@@ -170,7 +174,22 @@ class RoleTable(db.Model):
         return f'<RoleTable {self.user_username}: {self.role_id}>';
 
     @classmethod
+    def returnRoleIDByUsername(cls, username):
+        # no testing
+
+        selectedUserObject = User.returnUserbyUsername(username);
+
+        if not selectedUserObject:
+            return False;
+        
+        if not selectedUserObject.is_elevated:
+            return False;
+        
+        return cls.query.filter_by(user_username = username).role_id;
+
+    @classmethod
     def returnNumberOfRescueOrganizations(cls):
+        # no testing
         return cls.query.filter_by(role_id = 2).count();
 
 ''' =============PET CATEGORIES=============

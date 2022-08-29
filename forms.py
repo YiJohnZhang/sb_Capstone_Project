@@ -38,7 +38,7 @@ class RegisterForm(LoginForm):
     first_name = StringField('First Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your first name.')]);
     last_name = StringField('Last Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your last name.')]);
     email = StringField('Email', validators=[InputRequired(), Length(max=MAX_URL_LENGTH), Email()]);
-    
+
 class EleveatedMessageForm(FlaskForm):
     '''Send a message to request a Rescue Agency Account.'''
     

@@ -1,10 +1,6 @@
 {{ form.hidden_tag() }}
 
 {% for formField in form if formField.widget.input_type != 'hidden' %}
-        
-    {% for error in formField.errors %}
-        <span class="text-danger">{{ error }}</span>
-    {% endfor %}
     
     {% if displayFormLabel %}
 
@@ -16,5 +12,9 @@
         {{ formField(placeholder=formField.label.text, class="form-control") }}
         
     {% endif %}
+    
+    {% for error in formField.errors %}
+        <span class="text-danger">{{ error }}</span>
+    {% endfor %}
 
 {% endfor %}

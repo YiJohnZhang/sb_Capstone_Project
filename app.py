@@ -1,12 +1,12 @@
 import json
 from flask import Flask;
 from flask import request, session, g, jsonify, render_template, redirect, url_for, flash, abort;
-from sqlalchemy.exc import IntegrityError;
+from sqlalchemy.exc import IntegrityError, InvalidRequestError;
     # attempt to re-enter a unique constraint, on result found for admin attempt
 from models import db, connectDatabase;
 from models import User, Pet;
 from models import RoleTable, PetUserJoin, Breed, PetSpecie, CoatDescription, Color;
-from forms import LoginForm, RegisterForm, AddEditPetForm, SearchPetForm;
+from forms import LoginForm, RegisterForm, EditUserForm, AddEditPetForm, SearchPetForm;
     # add favoritepet?
 from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
@@ -18,10 +18,12 @@ import os;
 # Constants
 CURRENT_USER_KEY = "currentUser";
 RETURN_PAGE_KEY = "previousPage";
+IS_USER_ELEVATED_KEY = "isElevated";
+    # all users get this figure toggled to obfuscate the session key. good thing the session key mutates after every session (login/logout)
+    # also, this to reduce db queries?
 
 # Search Constants
 DEFAULT_CHOICE_TUPLE = (0, 'All');
-
 
 app = Flask(__name__);
 
@@ -45,7 +47,7 @@ db.create_all();
 def login(userObject):
     """Log in user."""
 
-    session[CURRENT_USER_KEY] = userObject.id;
+    session[CURRENT_USER_KEY] = userObject.username;
 
 def logout():
     """Logout user."""
@@ -53,17 +55,7 @@ def logout():
     if CURRENT_USER_KEY in session:
         del session[CURRENT_USER_KEY];
 
-    """Add non-caching headers on every request."""
-        
-    #   Turn off all caching in Flask: (useful for dev; in production, this kind of stuff is typically handled elsewhere)
-    #       https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
-
-    req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    req.headers["Pragma"] = "no-cache"
-    req.headers["Expires"] = "0"
-    req.headers['Cache-Control'] = 'public, max-age=0'
-    return req
-
+# ????
 def authenticate(username):
     '''Authenticate that the user in session is the same.'''
 
@@ -71,6 +63,16 @@ def authenticate(username):
         return True;
 
     return abort(403);
+
+def returnSiteStatistics():
+
+    statistics = {
+        'users': User.returnNumberOfUsers(),
+        'rescueOrganizations': RoleTable.returnNumberOfRescueOrganizations(),
+        'pets': Pet.returnNumberOfPets(), 
+    };
+
+    return statistics;
 
 
 def populatePetFormSelectFields(petForm):
@@ -204,6 +206,7 @@ def returnSearchPetForm():
 def before_request():
     """If we're logged in, add curr user to Flask global."""
 
+    session['asdf'] = 'afsddddd';   # obfuscation test. yes it will store extra data and obfuscate the original key because session is a dict itself.
     # update current user
     if CURRENT_USER_KEY in session:
         g.user = User.returnUserbyUsername(session[CURRENT_USER_KEY]);
@@ -222,11 +225,11 @@ def after_request(req):
     #   Turn off all caching in Flask: (useful for dev; in production, this kind of stuff is typically handled elsewhere)
     #       https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
 
-    req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    req.headers["Pragma"] = "no-cache"
-    req.headers["Expires"] = "0"
-    req.headers['Cache-Control'] = 'public, max-age=0'
-    return req
+    req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    req.headers["Pragma"] = "no-cache";
+    req.headers["Expires"] = "0";
+    req.headers['Cache-Control'] = 'public, max-age=0';
+    return req;
 
 # Authentication Decorators
 def loginRequired_decorator(f):
@@ -252,9 +255,38 @@ def notLoginRequired_decorator(f):
     
     return wrapper;
 
+# ?????
+def privateAuthentication_decorator(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+
+        # authenticate helpermethod
+        return f(*args, **kwargs);
+    
+    return wrapper;
+
+
+def elevatedAction_decorator(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+
+        # authenticate helpermethod
+        return f(*args, **kwargs);
+    
+    return wrapper;
+
+def rescueOrganizationAction_decorator(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        # authenticate helpermethod
+        return f(*args, **kwargs);
+    
+    return wrapper;
+
 def adminAction_decorator(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
+        # authenticate helpermethod
 
         return f(*args, **kwargs);
     
@@ -271,11 +303,6 @@ def error_403(error):
     '''403: Forbidden View'''
     return render_template('errors/error.html', errorCode = 403, previousPath = session[RETURN_PAGE_KEY]), 403;
 
-# Other Decorators
-
-
-
-
 '''ROUTES'''
 ''' Public Routes
 '''
@@ -285,26 +312,87 @@ def indexView():
 
     searchPetForm = returnSearchPetForm();
 
-    statistics = {
-        'users': User.returnNumberOfUsers(),
-        'rescueOrganizations': RoleTable.returnNumberOfRescueOrganizations(),
-        'pets': Pet.returnNumberOfPets(), 
-    };
-
     return render_template('index.html',
         form = searchPetForm, displayFormLabel = True, 
-        statistics=statistics);
+        statistics=returnSiteStatistics());
+
+@app.route('/search')
+def searchView():
+    # todo. basically the above, but with more information and querying.
+        # return render_template();
+    return;
 
 # General Public Exclusive Routes
 @notLoginRequired_decorator
+@app.route('/login', methods=['GET', 'POST'])
 def loginView():
+    
+    loginForm = LoginForm();
 
-    return redirect(url_for('indexView'));
+    if loginForm.validate_on_submit():
+
+        print(request.form);
+
+        userObject = User.authentication(request.form.get('username'), request.form.get('encrypted_password'));
+
+        if userObject:
+
+            login(userObject);
+            return redirect(url_for('indexView'));
+        
+        else:
+            
+            loginForm.username.errors = ['Incorrect username/password combination.'];
+            return render_template('onboarding.html',
+                form=loginForm, onboardingAction='login',
+                statistics=returnSiteStatistics());
+        
+    return render_template('onboarding.html',
+        form=loginForm, onboardingAction='login',
+        statistics=returnSiteStatistics());
 
 @notLoginRequired_decorator
+@app.route('/signup', methods=['GET', 'POST'])
 def registerView():
-    # create user
-    return redirect(url_for('indexView'));
+
+    registerForm = RegisterForm();
+
+    if registerForm.validate_on_submit():
+
+        try:
+
+            userObject = User.createUser(request.form);
+            db.session.commit();
+                
+        # except InvalidRequestError:
+
+        #     # SQLAlchemy raises `InvalidRequestError` instead of `IntegrityError`,  if no commit, for violating UNIQUE constraint
+            
+        #     registerForm.username.errors = ['Username already taken.'];
+            
+        #     # a redirect will smother the error
+        #     return render_template('onboarding.html',
+        #         form=registerForm, onboardingAction='signup',
+        #         statistics=returnSiteStatistics());
+
+        except IntegrityError:
+
+            db.session.rollback();
+                # This version of SQLAlchemy raises `InvalidRequestError` instead of `IntegrityError`, if no rollback is issued, for violating UNIQUE constraint
+                    # https://stackoverflow.com/a/67566890
+            registerForm.username.errors = ['Username already taken.'];
+            
+            # a redirect will smother the error, therefore use render_template
+            return render_template('onboarding.html',
+                form=registerForm, onboardingAction='signup',
+                statistics=returnSiteStatistics());
+        
+        login(userObject);
+        return redirect(url_for('indexView'));
+
+    return render_template('onboarding.html',
+        form=registerForm, onboardingAction='signup',
+        statistics=returnSiteStatistics());
 
 ''' Private Routes
 '''
@@ -318,37 +406,64 @@ def logoutView():
 # User Routes
 @app.route('/user/<username>')
 def userView(username):
-
-
-
+    # todo.
+    # return user information and display it.
     return username;
 
 @loginRequired_decorator
 @app.route('/user/<username>/edit', methods=['GET', 'POST'])
 def editUserView(username):
+    # todo.
+    # have a form for editing the user. authenticate the action
+    # editUserForm = EditUserForm();
     return;
 
 # Restricted Routes
 @loginRequired_decorator
-@adminAction_decorator
-@app.route('/edit/<username>')
-def editUsernameDatabase(username):
+@elevatedAction_decorator
+@app.route('/edit')
+def elevatedEditIndexView():
+    # todo.
+
+    if not g.user.is_elevated:
+        return abort(404);  # to make it seem it doesn't exist
+
+    if RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]) == 1:
+        return redirect(url_for('editUsernameDatabase'));   # admin
+    elif RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]) == 2:
+        return redirect(url_for(''));   # rescue organization
+    
+    return abort(404);  # to make it seem it doesn't exist
+
+@loginRequired_decorator
+@rescueOrganizationAction_decorator
+@app.route('/<username>/addpet', methods=['GET', 'POST'])
+def rescueOrganizeAddPetView(username):
+    # todo.
     return;
 
 @loginRequired_decorator
-@adminAction_decorator
-@app.route('/edit/<username>/addpet')
-def addPetView(username):
-    return;
-
-@loginRequired_decorator
-@adminAction_decorator
-@app.route('/pet/<int:petID>/edit')
-def editPetView(petID):
+@rescueOrganizationAction_decorator
+@app.route('/<username>/editPet/<int:petID>/', methods=['GET', 'POST'])
+def rescueOrganizeEditPetView(petID):
+    # todo.
     # match username to pet to authorize
     return;
 
+@loginRequired_decorator
+@adminAction_decorator
+@app.route('/admin/users')
+def editUsernameDatabase():
+    # todo.
+    return;
+
+@loginRequired_decorator
+@adminAction_decorator
+@app.route('/admin/pets')
+def editPetDatabase():
 # for admins, they can edit users except for other admins.
+    # todo.
+    return;
 
 
 
@@ -380,6 +495,5 @@ def fetchPetBreeds(petSpecieID):
 
     for petBreed in petBreedQuery:
         validPetBreeds.append({'id':petBreed.id, 'breed_name':petBreed.breed_name});
-
 
     return jsonify({'breeds': validPetBreeds});
