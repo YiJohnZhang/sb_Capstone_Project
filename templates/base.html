@@ -24,29 +24,31 @@
         <tr>
           <td>
             <a href="/" class="navbar-brand">
-              <img id='logo' src="{{url_for('static', filename='favicon.ico')}}" alt="PetSearch logo">
+              <img id='nav-logo' src="{{url_for('static', filename='imgs/default_pet.png')}}" alt="PetSearch logo">
             </a>
           </td>
           <td class="navbar-td-empty"></td>
           {% if not g.user %}
-            <td class="navbar-td-empty"></td>
-            <td><a href="/signup">Sign up</a></td>
-            <td><a href="/login">Log in</a></td>
+            <td class="navbar-td">
+              <a class="btn btn-outline-dark btn-sm" href="/signup">Sign up</a>
+              <a class="btn btn-outline-dark btn-sm" href="/login">Log in</a>
+            </td>
           {% else %}
-            {% if g.user.is_elevated %}
-              <td><a href="/edit">Administrator Operations</a></td>
-            {% else %}
-              <td class="navbar-td-empty"></td>
-            {% endif %}
-            <td>
-              <a href="/users/{{ g.user.id }}">
-                <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
+            <td id='nav-picture_container' class="navbar-td">
+              <a href="/users/{{ g.user.username }}">
+                <img src="{{ g.user.image_url }}" alt="{{ g.user.username }} Profile">
               </a>
             </td>
-            <td><a href="/logout">Log out</a></td>
+            <td class="navbar-td">
+              {% if g.user.is_elevated %}
+                <a class="btn btn-outline-success btn-sm" href="/edit">Admin</a>
+              {% endif %}
+              <a class="btn btn-outline-dark btn-sm" href="/logout">Log out</a>
+            </td>
           {% endif %}
         </tr>
       </table>
+    </div>
 
     <!-- Flash Messages -->
     <div>

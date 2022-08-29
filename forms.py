@@ -39,23 +39,23 @@ class RegisterForm(LoginForm):
     last_name = StringField('Last Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your last name.')]);
     email = StringField('Email', validators=[InputRequired(), Length(max=MAX_URL_LENGTH), Email()]);
 
-class EleveatedMessageForm(FlaskForm):
+class RequestElevatedForm(FlaskForm):
     '''Send a message to request a Rescue Agency Account.'''
     
     first_name = StringField('First Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your first name.')]);
     last_name = StringField('Last Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your last name.')]);
-    agency_name = StringField('Agency Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your organization\'s name.')]);
+    agency_name = StringField('Agency Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of the organization\'s name.')]);
     agency_type = SelectField('Agency Type', validators=[InputRequired()], 
         choices=[
             (1, 'Public, Government'),
-            (2, 'Private, 501\(c2\)'),
-            (3, 'Private, 501\(c3\)'),
+            (2, 'Private, 501(c2)'),
+            (3, 'Private, 501(c3)'),
             (4, 'Private, None of the above'),
             (5, 'Mixed')
         ],
         coerce=int);
     email = StringField('Email', validators=[InputRequired(), Length(max=MAX_URL_LENGTH), Email()]);
-    message = TextAreaField(f'Message \(Optional, {MESSAGE_MAX_LENGTH} Characters\)', 
+    message = TextAreaField(f'Message (Optional, {MESSAGE_MAX_LENGTH} Characters)', 
         validators=[Optional(), Length(max=MESSAGE_MAX_LENGTH, message=f'Max message length: {MESSAGE_MAX_LENGTH} characters.')]);
 
 class EditUserForm(FlaskForm):
@@ -119,7 +119,8 @@ class AddEditPetForm(FlaskForm):
 
     pet_specie = RadioField('Pet Classficiation', validators=[InputRequired()], coerce=int, 
         render_kw={
-            'class':'petSpecie_input'
+            'class':'petSpecie_input btn-group btn-group-toggle',
+            'data-toggle': "buttons"
         });
     primary_breed = SelectField('Pet Breed', validators=[InputRequired()], coerce=int);
         # null the selection in new pet logic (models.py) if the pet_classificatino is not dog or cat. doesn't need to be that polished.

@@ -1,12 +1,27 @@
 
 
+/* Bootstrap CSS Selectors (Override)
+*/
+.btn-block{
+    width:100%;
+}
 
+/*  Document CSS Selectors
+*/
+form{
+
+}
+    form input{
+        margin-bottom:1em;
+    }
+    
 .form-control{
     list-style: none;
 }
 
+
 #navbar{
-    height:100px;
+    padding:10px;
 }
     #navbar table, #navbar tr{
         width: 100%;
@@ -14,11 +29,32 @@
     #navbar td{
         text-align: center;
     }
-        .navbar-td-empty{
+        .navbar-td{
             width:20%;
+        }
+        .navbar-td-empty{
+            width:75%;
+        }
+        #nav-logo{
+            width:49px;
+        }
+        #nav-picture_container{
+            width:0;
+        }
+        #nav-picture_container img{
+            width:49px;
+            border-radius:100%;
         }
     #logo{
         max-height:100px;
+    }
+
+#onboarding{
+    width:100%;
+}
+    .onboarding-td{
+        width:33%;
+        text-align:center;
     }
 
 .petSpecie_input li{

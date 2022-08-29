@@ -13,7 +13,7 @@ with open('seed/seed_user_list.csv') as userList:
 
     reader = DictReader(userList)
     for row in reader:
-        row['is_elevated'] = bool(row['is_elevated']);
+        row['is_elevated'] = bool(int(row['is_elevated']));
             # bool has trouble being interpreted in SQL 1.1.18+: https://github.com/fossasia/open-event-server/pull/5623
         rowArray.append(row);
 
@@ -44,13 +44,13 @@ with open('seed/seed_pet_list.csv') as petList:
 
     reader = DictReader(petList)
     for row in reader:
-        row['gender'] = bool(row['gender']);
+        row['gender'] = bool(int(row['gender']));
             # See Line 13 Comment
-        row['sterilized'] = bool(row['sterilized']);
-        row['age_certainty'] = bool(row['age_certainty']);
+        row['sterilized'] = bool(int(row['sterilized']));
+        row['age_certainty'] = bool(int(row['age_certainty']));
         row['pet_specie'] = int(row['pet_specie']);
-        row['trained'] = bool(row['trained']);
-        row['medical_records_uptodate'] = bool(row['medical_records_uptodate']);
+        row['trained'] = bool(int(row['trained']));
+        row['medical_records_uptodate'] = bool(int(row['medical_records_uptodate']));
             
         rowArray.append(row);
 

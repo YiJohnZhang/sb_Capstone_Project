@@ -28,7 +28,8 @@ class User(db.Model):
     description = db.Column(db.Text, nullable = True);
         # limit to 512 in Form
     image_url = db.Column(db.Text, nullable = False, default='_defaultUser.jpg')
-    is_elevated = db.Column(db.Boolean, nullable = False, default = False, server_default='false'); # do not show on `forms.py` to register
+    is_elevated = db.Column(db.Boolean, nullable = False, default = False);
+        # do not show on `forms.py` to register
 
     # insert foreignkey rel, roletable
 
@@ -55,11 +56,19 @@ class User(db.Model):
         return mutableRequestData;
 
     @classmethod
+    def gracefullyReturnUserByUsername(cls, username):
+        ''''''
+        # no testing
+
+        return cls.query.get(username);
+
+
+    @classmethod
     def returnUserbyUsername(cls, username):
         ''''''
-        userObject = cls.query.get_or_404(username);
+        # no testing
 
-        return userObject;
+        return cls.query.get_or_404(username);
 
     @classmethod
     def returnNumberOfUsers(cls):
@@ -86,7 +95,10 @@ class User(db.Model):
     def authentication(cls, username, password):
         '''Authentication, either for login or an extra authentication key. The entered credentials.'''
 
-        UserObject = cls.returnUserbyUsername(username);
+        UserObject = cls.gracefullyReturnUserByUsername(username);
+
+        if not UserObject:
+            raise False;
 
         if UserObject and bcrypt.check_password_hash(UserObject.encrypted_password, password):
             return UserObject;
@@ -175,6 +187,7 @@ class RoleTable(db.Model):
 
     @classmethod
     def returnRoleIDByUsername(cls, username):
+        '''Returns falsey value if the username is not associated with an elevated role. Otherwise, it returns the elevated role ID.'''
         # no testing
 
         selectedUserObject = User.returnUserbyUsername(username);
@@ -185,7 +198,7 @@ class RoleTable(db.Model):
         if not selectedUserObject.is_elevated:
             return False;
         
-        return cls.query.filter_by(user_username = username).role_id;
+        return cls.query.filter_by(user_username = username).one_or_none();
 
     @classmethod
     def returnNumberOfRescueOrganizations(cls):
@@ -377,7 +390,15 @@ class Pet(db.Model):
         return mutableRequestData;
 
     @classmethod
+    def returnPetByID(cls, petID):
+        ''''''
+        # no test
+        return cls.query.get_or_404(petID);
+
+    @classmethod
     def returnNumberOfPets(cls):
+        ''''''
+        # no test
         return cls.query.count();
 
     @classmethod
