@@ -10,11 +10,11 @@
 
   <div class="row justify-content-md-center">
     <div class="col-md-7 col-lg-7">
-      <table id="onboarding">
+      <table id="onboardingLinkTable">
         <tr>
-          <td class="onboarding-td"><a class="btn btn-outline-primary btn-sm" href='/login' class='{% if onboardingAction=="login"%}selectedOnboarding{% endif %}'>Login</a></td>
-          <td class="onboarding-td"><a class="btn btn-outline-primary btn-sm" href='/signup' class='{% if onboardingAction=="signup"%}selectedOnboarding{% endif %}'>Signup</a></td>
-          <td class="onboarding-td"><a class="btn btn-outline-primary btn-sm" href='/rescueSignup' class='{% if onboardingAction=="request"%}selectedOnboarding{% endif %}'>Request Organization Account</a></td>
+          <td class="onboardingLinkTable-td"><a class="btn btn-outline-dark btn-sm btn-block" href='/login' class='{% if onboardingAction=="login"%}selectedOnboarding{% endif %}'>Login</a></td>
+          <td class="onboardingLinkTable-td"><a class="btn btn-outline-dark btn-sm btn-block" href='/signup' class='{% if onboardingAction=="signup"%}selectedOnboarding{% endif %}'>Signup</a></td>
+          <td class="onboardingLinkTable-td"><a class="btn btn-outline-dark btn-sm btn-block" href='/rescueSignup' class='{% if onboardingAction=="request"%}selectedOnboarding{% endif %}'>Request Organization Account</a></td>
         </tr>
       </table>
       <h2 class="join-message">
@@ -33,7 +33,7 @@
         
         {% include 'form_base.html' %}
 
-        <button class="btn btn-primary btn btn-block">
+        <button class="btn btn-dark btn btn-block">
           
           {% if onboardingAction == 'signup' %}
             Sign Up

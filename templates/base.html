@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <title>PetSearch</title>
 
-    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}">  
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}" type="image/x-icon">  
+    <!-- <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"> -->
 
     <script src="https://unpkg.com/bootstrap"></script>
     <script src="https://unpkg.com/jquery"></script>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/style.css')}}">
 
 </head>
@@ -30,8 +30,10 @@
           <td class="navbar-td-empty"></td>
           {% if not g.user %}
             <td class="navbar-td">
-              <a class="btn btn-outline-dark btn-sm" href="/signup">Sign up</a>
-              <a class="btn btn-outline-dark btn-sm" href="/login">Log in</a>
+              <a class="btn btn-outline-dark btn-sm btn-block" href="/signup">Sign up</a>
+            </td>
+            <td class="navbar-td">
+              <a class="btn btn-outline-dark btn-sm btn-block" href="/login">Log in</a>
             </td>
           {% else %}
             <td id='nav-picture_container' class="navbar-td">
@@ -39,11 +41,15 @@
                 <img src="{{ g.user.image_url }}" alt="{{ g.user.username }} Profile">
               </a>
             </td>
-            <td class="navbar-td">
+            <td class="navbar-td textAlign-right">
               {% if g.user.is_elevated %}
-                <a class="btn btn-outline-success btn-sm" href="/edit">Admin</a>
+                <a class="btn btn-outline-success btn-sm btn-block" href="/edit"><i class="fa-solid fa-database"></i> Database</a>
+              {% else %}
+                <a class="btn btn-outline-danger btn-sm btn-block" href="/edit"><i class="fa-solid fa-heart"></i> Favorites</a>
               {% endif %}
-              <a class="btn btn-outline-dark btn-sm" href="/logout">Log out</a>
+            </td>
+            <td class="navbar-td textAlign-right">
+              <a class="btn btn-outline-dark btn-sm btn-block" href="/logout">Log out</a>
             </td>
           {% endif %}
         </tr>
@@ -51,16 +57,17 @@
     </div>
 
     <!-- Flash Messages -->
-    <div>
+    <div id='flash'>
 
         {% for category, message in get_flashed_messages(with_categories=True) %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
+            <div class="alert alert-{{ category }} position-absolute">{{ message }}</div>
         {% endfor %}
 
     </div>
-
-    {% block content %}
-    {% endblock content %}
+    <div id='content'>
+      {% block content %}
+      {% endblock content %}
+    </div>
 
     <script src="/static/scripts/script.js"></script>
 

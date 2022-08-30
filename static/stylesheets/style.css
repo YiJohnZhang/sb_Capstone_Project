@@ -2,6 +2,14 @@
 
 /* Bootstrap CSS Selectors (Override)
 */
+.row{
+    margin-left:0;
+    margin-right:0;
+}
+.alert{
+    width:100%;
+    border-radius:0;
+}
 .btn-block{
     width:100%;
 }
@@ -28,11 +36,10 @@ form{
     #navbar table, #navbar tr{
         width: 100%;
     }
-    #navbar td{
-        text-align: center;
-    }
         .navbar-td{
-            width:20%;
+            width:10%;
+            padding:0 1%;
+            text-align: center;
         }
         .navbar-td-empty{
             width:75%;
@@ -42,6 +49,7 @@ form{
         }
         #nav-picture_container{
             width:0;
+            padding:0;
         }
         #nav-picture_container img{
             width:49px;
@@ -51,14 +59,26 @@ form{
         max-height:100px;
     }
 
-#onboarding{
-    width:100%;
+#content{
+    margin:4% 2% 0 2%;
 }
-    .onboarding-td{
+
+#onboardingLinkTable{
+    width:100%;
+    margin-bottom:4%;
+}
+    .onboardingLinkTable-td{
         width:33%;
+        padding:0 1%;
         text-align:center;
     }
 
 .petSpecie_input li{
     display:inline;
+}
+
+/*  General CSS Selectors
+*/
+.textAlign-right{
+    text-align: right;
 }
