@@ -41,9 +41,6 @@ form{
         .navbar-td{
             text-align: center;
         }
-        .navbar-td-empty{
-            width:75%;
-        }
         #nav-logo{
             width:49px;
         }
@@ -67,11 +64,6 @@ form{
     width:100%;
     margin-bottom:4%;
 }
-    .onboardingLinkTable-td{
-        width:33%;
-        padding:0 1%;
-        text-align:center;
-    }
 
 #userInformationTable{
     width:100%;
@@ -92,6 +84,14 @@ form{
 
 /*  General CSS Selectors
 */
+.user-image{
+    width:100px;
+    height:100px;
+    object-fit:cover;
+    /*chrome32+, edge16/79+, f36+, o19+, s10+, */
+        -o-object-fit: cover;   /**o11.6-o15*/
+}
+}
 .pet-container{
     display:inline;
 }
@@ -107,15 +107,31 @@ form{
     border-radius:100%;
 }
 
+.isElevated{
+    font-weight: bold;
+    color:#0F0;
+}
+
 .textAlign-right{
     text-align: right;
 }
 
-.td-20{
-    width:20%;
-    padding:0 1%;
-}
-.td-10{
-    width:10%;
-    padding:0 1%;
-}
+td{}
+    .td-empty{
+        width:75%;
+    }
+    .td-centerDisplay{
+        text-align:center;
+    }
+    .td-33{
+        width:33%;
+        padding:0 1%;
+    }
+    .td-20{
+        width:20%;
+        padding:0 1%;
+    }
+    .td-10{
+        width:10%;
+        padding:0 1%;
+    }

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block backgroundImage %}style="background-image:none"{% endblock backgroundImage %}
+    <!--remove distracting bg image-->
+
+{% block content %}
+
+    <table id="onboardingLinkTable">
+        <tr>
+            <td class="td-33"><a class="btn btn-outline-success btn-sm btn-block" href='/database/users' class=''>Moderate Users</a></td>
+            <td class="td-33"><a class="btn btn-outline-success btn-sm btn-block" href='/database/pets' class=''>Moderate Pets</a></td>
+            <td class="td-33"><a class="btn btn-outline-dark btn-sm btn-block" href='/users/{{g.user.username}}' class=''>Return to Profile</a></td>
+        </tr>
+    </table>
+    <table>
+
+        {% if informationType=='users' %}
+            <tr>
+                <th>##</th>
+                <th>Image</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th colspan=2>Name</th>
+                <th colspan=2>Complaints</th>
+                <th>Status</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Last</td>
+                <td>First</td>
+                <td>Filed</td>
+                <td>Against</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% for information in listedInformation %}
+                <tr>
+                    <td></td>
+                    <td><img class="user-image" src="{{information.image_url}}" alt="{{information.username}}"></td>
+                    <td>
+                        <a {%if information.is_elevated%}class="isElevated"{%endif%} href='/users/{{information.username}}'>{{information.username}}</a>
+                    </td>
+                    <td {%if information.is_elevated%}class="isElevated"{%endif%}>{{information.email}}</td>
+                    <td {%if information.is_elevated%}class="isElevated"{%endif%}>{{information.last_name}}</td>
+                    <td {%if information.is_elevated%}class="isElevated"{%endif%}>{{information.first_name}}</td>
+                    <td {%if information.is_elevated%}class="isElevated"{%endif%}>Null</td> <!-- Everything below beyond scope of project-->
+                    <td {%if information.is_elevated%}class="isElevated"{%endif%}>Null</td>
+                    <td>Active</td>
+                    <td><a class="btn-outline-success btn btn-block"><i class="fa-solid fa-message-dots"></i> Message</a></td>
+                    <td><a class="btn-outline-danger btn btn-block"><i class="fa-solid fa-hammer-war"></i> Ban</a></td>
+                    <td class="td-empty"><a class="btn-dark btn btn-block">Spacer</a></td>
+                    <td><a class="btn-danger btn btn-block"><i class="fa-solid fa-trash-can"></i> Delete</a></td>
+                </tr>
+            {% endfor %}
+            
+        {% elif informationType=='pets' %}
+            <tr>
+                <th>##</th>
+                <th>Pet Image</th>
+                <th>Pet Name</th>
+                <th>Pet Listed By</th>
+                <th>Pet Specie</th>
+                <th>Complaints Against</th>
+                <th>Status</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                
+            </tr>
+            {% for information in listedInformation %}
+                <tr>
+                    <td></td>
+                    <td><img class="pet-image" src=/static/imgs/{{information.image_url}} alt="{{information.pet_name}}"></td>
+                    <td>{{information.pet_name}}</td>
+                    <td><a href="/users/{{information.petJoinAlias[0].user_username}}">{{information.petJoinAlias[0].user_username}}</a></td>
+                    <td>{{information.petClassReference.specie_name}}</td>
+                    <td>Null</td>   <!-- Everything below beyond scope of project-->                 
+                    <td>Active</td>
+                    <td><a class="btn-outline-success btn btn-block"><i class="fa-solid fa-message-dots"></i> Message</a></td>
+                    <td><a class="btn-outline-danger btn btn-block"><i class="fa-solid fa-hammer-war"></i> Ban</a></td>
+                    <td class="td-empty"><a class="btn-dark btn btn-block">Spacer</a></td>
+                    <td><a class="btn-danger btn btn-block"><i class="fa-solid fa-trash-can"></i> Delete Pet</a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+
+
+{% endblock content %}

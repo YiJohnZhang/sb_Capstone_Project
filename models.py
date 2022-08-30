@@ -136,8 +136,18 @@ class User(db.Model):
     @classmethod
     def returnAllUsers(cls):
         ''''''
-
         return cls.query.all();
+
+    @classmethod
+    def returnAllNonAdminUsers(cls):
+        ''''''
+
+        listOfAdminElevatedUserRoles = db.session.query(RoleTable).filter(RoleTable.role_id == 1).all();
+        listOfAdminElevatedUserUsernames = [userRole.userReference.username for userRole in listOfAdminElevatedUserRoles];
+
+        # print(listOfNonAdminElevatedUserUsernames);
+            #SQLAlchemy does not support `FULL OUTER JOIN`
+        return cls.query.filter(cls.username.notin_(listOfAdminElevatedUserUsernames));
 
     @classmethod
     def deleteUserByUsername(cls, username):
@@ -399,6 +409,12 @@ class Pet(db.Model):
         return cls.query.get_or_404(petID);
 
     @classmethod
+    def returnAllPets(cls):
+        ''''''
+        # no test
+        return cls.query.all();
+
+    @classmethod
     def returnNumberOfPets(cls):
         ''''''
         # no test
@@ -413,6 +429,10 @@ class Pet(db.Model):
     def updatePet(cls,requestData):
         # Todo.
         pass;
+
+    def returnInstanceAttributes(self):
+        ''''''
+        return vars(self);
 
     def removePet(self):
         # Todo. Requires authorization.
@@ -432,7 +452,7 @@ class PetUserJoin(db.Model):
 
     def __repr__(self):
         '''Self-representation for a PetUserJoin instance.'''
-        return f'<Pet-User {self.pet_id}-{self.user_id}>';
+        return f'<Pet-User {self.pet_id}-{self.user_username}>';
 
     @classmethod
     def returnPetUserByPrimaryKey(cls, username, petID):
@@ -458,7 +478,7 @@ class PrimaryBreedTable(db.Model):
 
     def __repr__(self):
         '''Self-representation for a Pet-Breed Join instance.'''
-        return f'<PrimaryBreedTable {self.pet_id}: {self.breed_id}>';
+        return f'<PrimaryBreedTable {self.pet_id}-{self.breed_id}>';
 
     @classmethod
     def createBreedJoinEntry(cls, requestData):

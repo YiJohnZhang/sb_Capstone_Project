@@ -303,16 +303,24 @@ def elevatedAction_decorator(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
 
-        # authenticate helpermethod
+        if not g.user.is_elevated:
+            return abort(404);
+            # hide any authorized methods.
+        
         return f(*args, **kwargs);
     
     return wrapper;
 
 def rescueOrganizationAction_decorator(f):
     ''''''
+    # troll idea: see if i can put a decorator before this one :P
     @wraps(f)
     def wrapper(*args, **kwargs):
-        # authenticate helpermethod
+        
+        if not session[USER_ROLE_KEY] == 2:
+            return abort(404);
+            # hide any authorized methods.
+
         return f(*args, **kwargs);
     
     return wrapper;
@@ -322,6 +330,10 @@ def adminAction_decorator(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         # authenticate helpermethod
+        
+        if not session[USER_ROLE_KEY] == 1:
+            return abort(404);
+            # hide any authorized methods.
 
         return f(*args, **kwargs);
     
@@ -528,9 +540,9 @@ def elevatedEditIndexView():
     if not g.user.is_elevated:
         return abort(404);  # to make it seem it doesn't exist
 
-    if RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]) == 1:
+    if RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]).role_id == 1:
         return redirect(url_for('editUsernameDatabase'));   # admin
-    elif RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]) == 2:
+    elif RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]).role_id == 2:
         return redirect(url_for('rescueOrganizeIndexView'));   # rescue organization
     
     return abort(404);  # to make it seem it doesn't exist
@@ -538,17 +550,22 @@ def elevatedEditIndexView():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
-def rescueOrganizeIndexView(username):
+def rescueOrganizeIndexView():
     ''''''
     # further work: overview of authorized users to maintain the rescue agency's database
-    # todo.
-    return;
+    
+    petList = PetUserJoin.returnPetsByUsername(g.user.username);
+
+    return render_template('admin/localDatabaseView.html',
+        listedInformation = petList, informationType = 'pets');
 
 @app.route('/dashboard/addpet', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
-def rescueOrganizeAddPetView(username):
+def rescueOrganizeAddPetView():
     ''''''
+
+    addPetForm = AddEditPetForm();
     # todo.
     return;
 
@@ -557,6 +574,14 @@ def rescueOrganizeAddPetView(username):
 @rescueOrganizationAction_decorator
 def rescueOrganizeEditPetView(petID):
     ''''''
+
+    # next up how to wrap the following 2 lines in a decorator:
+    userObject = User.returnUserbyUsername(g.user.username);
+    authenticatePetEdit(userObject, petID);
+
+    petObject = Pet.returnPetByID(petID);
+
+    editPetForm = AddEditPetForm(**(petObject.returnInstanceAttributes()));
     # todo.
     # match username to pet to authorize
     return;
@@ -566,19 +591,23 @@ def rescueOrganizeEditPetView(petID):
 @adminAction_decorator
 def editUsernameDatabase():
     ''''''
-    # todo.
-    return;
+
+    # for admins, they can take action against any user(s) except other admins.
+    userList = User.returnAllNonAdminUsers();
+
+    return render_template('admin/databaseView.html',
+        listedInformation = userList, informationType = 'users');
 
 @app.route('/database/pets')
 @loginRequired_decorator
 @adminAction_decorator
 def editPetDatabase():
     ''''''
-# for admins, they can edit users except for other admins.
-    # todo.
-    return;
 
+    petList = Pet.returnAllPets();
 
+    return render_template('admin/databaseView.html',
+        listedInformation = petList, informationType = 'pets');
 
 # tease with messages.
 
@@ -626,6 +655,11 @@ def serializeUsersFavoritePetList(username):
         return favoritePets;
 
     return None; # {'This is implemented later': 'for non-rescue organizations'};
+
+@app.route('/api/search')
+def fetchSearchQuery():
+    # todo? maybe no API search.
+    return;
 
 @app.route('/api/breeds/<int:petSpecieID>')
 def fetchPetBreeds(petSpecieID):
