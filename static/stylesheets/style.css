@@ -16,7 +16,9 @@
 
 /*  Document CSS Selectors
 */
-
+body{
+    background-image:url('../paw_print_2160p.jpg');
+}
 
 form{
 
@@ -37,8 +39,6 @@ form{
         width: 100%;
     }
         .navbar-td{
-            width:10%;
-            padding:0 1%;
             text-align: center;
         }
         .navbar-td-empty{
@@ -73,12 +73,49 @@ form{
         text-align:center;
     }
 
+#userInformationTable{
+    width:100%;
+}
+    #userInformationTable-userImageContainer{
+        width:0;
+    }
+    #userInformationTable h1, #userInformationTable p{
+        margin:0
+    }
+    #userInformationTable img{
+        border-radius:100%;
+    }
+
 .petSpecie_input li{
     display:inline;
 }
 
 /*  General CSS Selectors
 */
+.pet-container{
+    display:inline;
+}
+    .pet-container img{
+        display:block;
+    }
+.pet-image{
+    width:150px;
+    height:150px;
+    object-fit:cover;
+        /*chrome32+, edge16/79+, f36+, o19+, s10+, */
+        -o-object-fit: cover;   /**o11.6-o15*/
+    border-radius:100%;
+}
+
 .textAlign-right{
     text-align: right;
+}
+
+.td-20{
+    width:20%;
+    padding:0 1%;
+}
+.td-10{
+    width:10%;
+    padding:0 1%;
 }

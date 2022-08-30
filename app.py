@@ -50,8 +50,9 @@ db.create_all();
 
 
 '''HELPER FUNCTIONS'''
+# User Authentication Helper Function(s)
 def login(userObject):
-    """Log in user."""
+    '''Log in user.'''
 
     session[CURRENT_USER_KEY] = userObject.username;
     session[IS_USER_ELEVATED_KEY] = userObject.is_elevated;
@@ -63,31 +64,26 @@ def login(userObject):
         session[USER_ROLE_KEY] = None;
 
 def logout():
-    """Logout user."""
+    '''Logout user.'''
 
     if CURRENT_USER_KEY in session:
         session.clear();
 
-# ????
-def authenticate(username):
+def authenticate(claimedUsername):
     '''Authenticate that the user in session is the same.'''
 
-    if g.user == User.returnUserbyUsername(username):
+    if g.user == User.returnUserbyUsername(claimedUsername):
         return True;
 
     return abort(403);
 
-def returnSiteStatistics():
+def generateObfuscationString(stringLength):
+    '''Obfuscates the session key if intercepted and generates a new one every time.'''
 
-    statistics = {
-        'users': User.returnNumberOfUsers(),
-        'rescueOrganizations': RoleTable.returnNumberOfRescueOrganizations(),
-        'pets': Pet.returnNumberOfPets(), 
-    };
+    obfuscatedString = ''.join(random.choice(string.printable) for index in range(stringLength));
+    return obfuscatedString;
 
-    return statistics;
-
-
+# Form Generation Helper Function(s)
 def populatePetFormSelectFields(petForm):
     '''Populates form selection choices to create, edit, and search pet.'''
 
@@ -213,17 +209,27 @@ def returnSearchPetForm():
 
     return searchPetForm;
 
-def generateObfuscationString(stringLength):
-    '''Obfuscates the session key if intercepted and generates a new one every time.'''
+# Database Helper Function(s)
+def returnSiteStatistics():
+    ''''''
 
-    obfuscatedString = ''.join(random.choice(string.printable) for index in range(stringLength));
-    return obfuscatedString;
+    statistics = {
+        'users': User.returnNumberOfUsers(),
+        'rescueOrganizations': RoleTable.returnNumberOfRescueOrganizations(),
+        'pets': Pet.returnNumberOfPets(), 
+    };
+
+    return statistics;
 
 '''DECORATORS'''
 # Before & After Decorators
 @app.before_request
 def before_request():
-    """If we're logged in, add curr user to Flask global."""
+    '''Before each request:
+        - Obfuscate the encrypted session cookie by injecting random information.
+        - Update g.user from session.
+        - Get the referring page for a possible return route if landing on an error. (Perfection needed in a soft error w/ ...query.get() instead of ...query.get_or_404() but ¯\_(ツ)_/¯ for now)
+        '''
 
     session[OBFUSCATION_STRING_KEY] = generateObfuscationString(OBFUSCATION_STRING_LENGTH);
         # obfuscation test. yes it will store extra data and obfuscate the original key because session is a dict itself.
@@ -240,7 +246,9 @@ def before_request():
 
 @app.after_request
 def after_request(req):
-    """Add non-caching headers on every request."""
+    '''After each request:
+        - Add non-caching headers.
+        '''
         
     #   Turn off all caching in Flask: (useful for dev; in production, this kind of stuff is typically handled elsewhere)
     #       https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
@@ -253,6 +261,7 @@ def after_request(req):
 
 # Authentication Decorators
 def loginRequired_decorator(f):
+    ''''''
     @wraps(f)
     def wrapper(*args, **kwargs):
 
@@ -265,10 +274,12 @@ def loginRequired_decorator(f):
     return wrapper;
 
 def logoutRequired_decorator(f):
+    ''''''
     @wraps(f)
     def wrapper(*args, **kwargs):
         
         if g.user:
+            flash("You must logout first.", "danger");
             return redirect(url_for('indexView'));
             
         return f(*args, **kwargs);
@@ -276,7 +287,8 @@ def logoutRequired_decorator(f):
     return wrapper;
 
 # ?????
-def privateAuthentication_decorator(f):
+"""def privateAuthentication_decorator(f):
+    ''''''
     # troll idea: see if i can put a decorator before this one :P
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -284,10 +296,10 @@ def privateAuthentication_decorator(f):
         # authenticate helpermethod
         return f(*args, **kwargs);
     
-    return wrapper;
-
+    return wrapper;"""
 
 def elevatedAction_decorator(f):
+    ''''''
     @wraps(f)
     def wrapper(*args, **kwargs):
 
@@ -297,6 +309,7 @@ def elevatedAction_decorator(f):
     return wrapper;
 
 def rescueOrganizationAction_decorator(f):
+    ''''''
     @wraps(f)
     def wrapper(*args, **kwargs):
         # authenticate helpermethod
@@ -305,6 +318,7 @@ def rescueOrganizationAction_decorator(f):
     return wrapper;
 
 def adminAction_decorator(f):
+    ''''''
     @wraps(f)
     def wrapper(*args, **kwargs):
         # authenticate helpermethod
@@ -330,6 +344,7 @@ def error_403(error):
 # General Public Routes
 @app.route('/')
 def indexView():
+    ''''''
 
     searchPetForm = returnSearchPetForm();
 
@@ -339,12 +354,14 @@ def indexView():
 
 @app.route('/search')
 def searchView():
+    ''''''
     # todo. basically the above, but with more information and querying.
         # return render_template();
     return;
 
-@app.route('/pet/<int:petID>')
+@app.route('/pets/<int:petID>')
 def petView(petID):
+    ''''''
 
     petObject = Pet.returnPetByID(petID);
 
@@ -354,6 +371,7 @@ def petView(petID):
 @app.route('/login', methods=['GET', 'POST'])
 @logoutRequired_decorator
 def loginView():
+    ''''''
 
     loginForm = LoginForm();
 
@@ -389,6 +407,7 @@ def loginView():
 @app.route('/signup', methods=['GET', 'POST'])
 @logoutRequired_decorator
 def registerView():
+    ''''''
 
     registerForm = RegisterForm();
 
@@ -432,6 +451,7 @@ def registerView():
 @app.route('/rescueSignup', methods=['GET', 'POST'])
 @logoutRequired_decorator
 def organizationRegisterView():
+    ''''''
 
     organizationRequestForm = RequestElevatedForm();
 
@@ -452,35 +472,58 @@ def organizationRegisterView():
 @app.route('/logout')
 @loginRequired_decorator
 def logoutView():
+    ''''''
     logout();
     return redirect(url_for('indexView'));
 
 # User Routes
-@app.route('/user/<username>')
+@app.route('/users/<username>')
 def userView(username):
-    # todo.
-    # return user information and display it.
+    ''''''
 
     userObject = User.returnUserbyUsername(username);
 
-    return userObject.username;
+    favoritePets = fetchUsersFavoritePetList(username);
 
-@app.route('/user/<username>/edit', methods=['GET', 'POST'])
+    return render_template('user/profile.html',
+        userObject = userObject,
+        petList = favoritePets);
+
+@app.route('/users/<username>/edit', methods=['GET', 'POST'])
 @loginRequired_decorator
 def editUserView(username):
-    # todo.
+    ''''''
+
+    # next up how to wrap the following 2 lines in a decorator:
     userObject = User.returnUserbyUsername(username);
-    # have a form for editing the user. authenticate the action
-    # editUserForm = EditUserForm();
-    
-    return userObject;
+    authenticate(userObject.username);
+
+    editUserForm = EditUserForm(**(userObject.returnInstanceAttributes()));
+
+    if editUserForm.validate_on_submit():
+
+        if User.authentication(username, request.form.get('password')):
+            # user username to "double" authentication
+            userObject.updateUser(request.form);
+            return redirect(url_for('userView', username=username));
+
+        else:
+
+            editUserForm.password.errors=['Invalid Password. Try again.'];
+            return render_template('user/edit.html',
+                form=editUserForm, 
+                userObject = userObject);
+
+    return render_template('user/edit.html',
+        form=editUserForm, 
+        userObject = userObject);
 
 # Restricted Routes
 @app.route('/edit')
 @loginRequired_decorator
 @elevatedAction_decorator
 def elevatedEditIndexView():
-    # todo.
+    ''''''
 
     if not g.user.is_elevated:
         return abort(404);  # to make it seem it doesn't exist
@@ -488,36 +531,49 @@ def elevatedEditIndexView():
     if RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]) == 1:
         return redirect(url_for('editUsernameDatabase'));   # admin
     elif RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]) == 2:
-        return redirect(url_for(''));   # rescue organization
+        return redirect(url_for('rescueOrganizeIndexView'));   # rescue organization
     
     return abort(404);  # to make it seem it doesn't exist
 
-@app.route('/<username>/addpet', methods=['GET', 'POST'])
+@app.route('/dashboard', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
-def rescueOrganizeAddPetView(username):
+def rescueOrganizeIndexView(username):
+    ''''''
+    # further work: overview of authorized users to maintain the rescue agency's database
     # todo.
     return;
 
-@app.route('/<username>/editPet/<int:petID>/', methods=['GET', 'POST'])
+@app.route('/dashboard/addpet', methods=['GET', 'POST'])
+@loginRequired_decorator
+@rescueOrganizationAction_decorator
+def rescueOrganizeAddPetView(username):
+    ''''''
+    # todo.
+    return;
+
+@app.route('/dashboard/editPet/<int:petID>/', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
 def rescueOrganizeEditPetView(petID):
+    ''''''
     # todo.
     # match username to pet to authorize
     return;
 
-@app.route('/admin/users')
+@app.route('/database/users')
 @loginRequired_decorator
 @adminAction_decorator
 def editUsernameDatabase():
+    ''''''
     # todo.
     return;
 
-@app.route('/admin/pets')
+@app.route('/database/pets')
 @loginRequired_decorator
 @adminAction_decorator
 def editPetDatabase():
+    ''''''
 # for admins, they can edit users except for other admins.
     # todo.
     return;
@@ -526,10 +582,54 @@ def editPetDatabase():
 
 # tease with messages.
 
-''' API Routes
+''' API Routes & API Helper Methods
 '''
+
+def json_serializeSQLAModel(SQLAModelObject):
+    ''''''
+
+    modelProperties = vars(SQLAModelObject);
+    modelProperties.pop('_sa_instance_state');
+
+    return modelProperties;
+
+def json_returnSerializedPetList(petObjectList):
+    
+    petListSerialized = [json_serializeSQLAModel(petObject) for petObject in petObjectList];
+
+    return petListSerialized;
+
+def fetchUsersFavoritePetList(username):
+    ''''''
+
+    userObject = User.returnUserbyUsername(username);
+    
+    if userObject.is_elevated and (RoleTable.returnRoleIDByUsername(username).role_id == 2):
+        
+        favoritePets = [petUserObject.petReference for petUserObject in PetUserJoin.returnPetsByUsername(username)];
+
+        return favoritePets;
+
+    return None; # {'This is implemented later': 'for non-rescue organizations'};
+
+def serializeUsersFavoritePetList(username):
+    ''''''
+
+    userObject = User.returnUserbyUsername(username);
+    favoritePets = [];
+    
+    if userObject.is_elevated and (RoleTable.returnRoleIDByUsername(username).role_id == 2):
+        
+        petObjectList = fetchUsersFavoritePetList(username);
+        favoritePets.append(json_returnSerializedPetList(petObjectList));
+
+        return favoritePets;
+
+    return None; # {'This is implemented later': 'for non-rescue organizations'};
+
 @app.route('/api/breeds/<int:petSpecieID>')
 def fetchPetBreeds(petSpecieID):
+    ''''''
 
     validPetBreeds = [];
     validPetBreeds.append({'id': DEFAULT_CHOICE_TUPLE[0], 'breed_name': DEFAULT_CHOICE_TUPLE[1]});
@@ -554,3 +654,10 @@ def fetchPetBreeds(petSpecieID):
         validPetBreeds.append({'id':petBreed.id, 'breed_name':petBreed.breed_name});
 
     return jsonify({'breeds': validPetBreeds});
+
+@app.route('/api/<username>/pets')
+def fetchUserPetList(username):
+    ''''''
+
+    favoritePets = fetchUsersFavoritePetList(username);
+    return jsonify({'favoritePets': favoritePets});

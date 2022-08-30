@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-md-center">
+    <div class="col-lg-7">
+        <table id="userInformationTable">
+            <tr>
+                <td>
+                    <h1>{{userObject.username}}</h1>
+                    <p>{{userObject.first_name}} {{userObject.last_name}}</p>
+                </td>
+                <td></td>
+                <td class="td-20">
+                    {% if g.user.username == userObject.username%}
+                        <a class="btn btn-dark btn btn-block" href="/users/{{userObject.username}}/edit"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td rowspan=2 id="userInformationTable-userImageContainer">
+                    <img src="{{userObject.image_url}}" alt="{{userObject.username}}: {{userObject.first_name}}">
+                </td>
+                <td colspan=2>
+                    {{userObject.description}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>Social Links: (Not Seeded)</td>
+            </tr>
+            <tr>
+                <td colspan=3>
+                    {% if petList %}
+                    <h1>Favorite Pets</h1>
+                    {% include 'pet_container.html' %}
+                        {% for favoritePet in petList %}
+                        <div class="pet-container">
+                            <!-- <img src="{{url_for('static', filename='imgs/{{favoritePet.image_url}}')}}" alt="{{favoritePet.pet_name}}"> -->
+                            <img class="pet-image" src="/static/imgs/{{favoritePet.image_url}}" alt="{{favoritePet.pet_name}}">
+                            <a href="/pets/{{favoritePet.id}}">{{favoritePet.pet_name}}</a>
+                        </div>
+                        {% endfor %}
+                    {% endif%}
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+</div>
+
+{% endblock content %}

@@ -29,26 +29,26 @@
           </td>
           <td class="navbar-td-empty"></td>
           {% if not g.user %}
-            <td class="navbar-td">
+            <td class="td-10 navbar-td">
               <a class="btn btn-outline-dark btn-sm btn-block" href="/signup">Sign up</a>
             </td>
-            <td class="navbar-td">
+            <td class="td-10 navbar-td">
               <a class="btn btn-outline-dark btn-sm btn-block" href="/login">Log in</a>
             </td>
           {% else %}
-            <td id='nav-picture_container' class="navbar-td">
+            <td id='nav-picture_container' class="td-10 navbar-td">
               <a href="/users/{{ g.user.username }}">
                 <img src="{{ g.user.image_url }}" alt="{{ g.user.username }} Profile">
               </a>
             </td>
-            <td class="navbar-td textAlign-right">
+            <td class="td-10 navbar-td textAlign-right">
               {% if g.user.is_elevated %}
                 <a class="btn btn-outline-success btn-sm btn-block" href="/edit"><i class="fa-solid fa-database"></i> Database</a>
               {% else %}
                 <a class="btn btn-outline-danger btn-sm btn-block" href="/edit"><i class="fa-solid fa-heart"></i> Favorites</a>
               {% endif %}
             </td>
-            <td class="navbar-td textAlign-right">
+            <td class="td-10 navbar-td textAlign-right">
               <a class="btn btn-outline-dark btn-sm btn-block" href="/logout">Log out</a>
             </td>
           {% endif %}

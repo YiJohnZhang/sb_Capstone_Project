@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-md-center">
+    <div class="col-lg-7">
+        <h2>Edit your profile, {{userObject.first_name}}.</h2>
+        <form method="POST" id="">
+        
+            {% include 'form_base.html' %}
+
+            <a class="btn btn-outline-danger" href="/users/{{userObject.username}}">Cancel Changes</a>
+            <button class="btn btn-dark">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

@@ -37,7 +37,7 @@ class RegisterForm(LoginForm):
 
     first_name = StringField('First Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your first name.')]);
     last_name = StringField('Last Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your last name.')]);
-    email = StringField('Email', validators=[InputRequired(), Length(max=MAX_URL_LENGTH), Email()]);
+    email = StringField('Email', validators=[InputRequired(), Length(max=MAX_URL_LENGTH, message=f'The max length of an email is {MAX_URL_LENGTH} characters.'), Email()]);
 
 class RequestElevatedForm(FlaskForm):
     '''Send a message to request a Rescue Agency Account.'''
@@ -61,19 +61,24 @@ class RequestElevatedForm(FlaskForm):
 class EditUserForm(FlaskForm):
     
     username = StringField('Username',
-        render_kw={'readonly': True});  # disabled
+        render_kw={'disabled': True});
         # ... = ...(label, ..., render_kw={'readonly': True});
             # Make a form element read-only: https://stackoverflow.com/a/43215676
+            # 2022-08-29: no, it is 'disabled'.
     first_name = StringField('First Name', 
         validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your first name.')]);
     last_name = StringField('Last Name',
         validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your last name.')]);
-    email = StringField('Email',
-        render_kw={'readonly': True});  # disabled
+    email = StringField('Email', validators=[Length(max=MAX_URL_LENGTH), Email()],
+        render_kw={
+            # 'readonly': True,   # disable try 1
+            'disabled': True    # disable try 2
+            });
     description = TextAreaField('Description', 
         validators=[InputRequired(), Length(max=DESCRIPTION_MAX_LENGTH, message='Describe yourself in {DESCRIPTION_MAX_LENGTH} charactesr or less.')]);
+    image_url = StringField('Image URL', validators=[Optional(), Length(max=MAX_URL_LENGTH, message=f'The max length of an email is {MAX_URL_LENGTH} characters.')]);
 
-    password = PasswordField('Password', 
+    password = PasswordField('Confirmation Password', 
         validators=[
             InputRequired(), 
             Length(min=PASSWORD_LENGTH[0], max=PASSWORD_LENGTH[1], message=f'Enter a password between {PASSWORD_LENGTH[0]} and {PASSWORD_LENGTH[1]} characters.')

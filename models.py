@@ -49,8 +49,8 @@ class User(db.Model):
         if method == 'CreateUser':
             mutableRequestData.pop('confirm_password');
         elif method == 'EditUser':
-            mutableRequestData.pop('username');
-            mutableRequestData.pop('email');
+            # mutableRequestData.pop('username');
+            # mutableRequestData.pop('email');
             mutableRequestData.pop('password');
 
         return mutableRequestData;
@@ -59,7 +59,6 @@ class User(db.Model):
     def gracefullyReturnUserByUsername(cls, username):
         ''''''
         # no testing
-
         return cls.query.get(username);
 
 
@@ -98,7 +97,7 @@ class User(db.Model):
         UserObject = cls.gracefullyReturnUserByUsername(username);
 
         if not UserObject:
-            raise False;
+            return False;
 
         if UserObject and bcrypt.check_password_hash(UserObject.encrypted_password, password):
             return UserObject;
@@ -106,6 +105,10 @@ class User(db.Model):
         else:
             return False;
     
+    def returnInstanceAttributes(self):
+        ''''''
+        return vars(self);
+
     def updateUser(self, requestData):
         '''Update the user object. Update an entry in User by primary key ("username").'''
 
@@ -437,9 +440,9 @@ class PetUserJoin(db.Model):
         return cls.query.get_or_404((username, petID));
 
     @classmethod
-    def returnPetUserByUsername(cls, username):
+    def returnPetsByUsername(cls, username):
         '''Return all pets uploaded by a specified User.'''
-        return cls.query.filter(cls.user_id == username).all();
+        return cls.query.filter(cls.user_username == username).all();
 
 class PrimaryBreedTable(db.Model):
     '''Only for dogs and cats.'''
@@ -451,6 +454,7 @@ class PrimaryBreedTable(db.Model):
     breed_id = db.Column(db.SmallInteger, db.ForeignKey(Breed.id), primary_key = True);
 
     petReference = db.relationship('Pet', backref=db.backref('petAlias', cascade='all, delete'));
+    breedReference = db.relationship('Breed', backref=db.backref('breedAlias'));
 
     def __repr__(self):
         '''Self-representation for a Pet-Breed Join instance.'''
