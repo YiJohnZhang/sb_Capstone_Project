@@ -44,13 +44,12 @@ form{
         #nav-logo{
             width:49px;
         }
-        #nav-picture_container{
-            width:0;
-            padding:0;
-        }
-        #nav-picture_container img{
+        #navbar-user-img{
             width:49px;
             border-radius:100%;
+        }
+        #navbar-home-link{
+            text-decoration: none;
         }
     #logo{
         max-height:100px;
@@ -68,9 +67,6 @@ form{
 #userInformationTable{
     width:100%;
 }
-    #userInformationTable-userImageContainer{
-        width:0;
-    }
     #userInformationTable h1, #userInformationTable p{
         margin:0
     }
@@ -84,6 +80,11 @@ form{
 
 /*  General CSS Selectors
 */
+.btn-radio{
+    margin:0;
+    border:none;
+}
+
 .user-image{
     width:100px;
     height:100px;
@@ -99,8 +100,8 @@ form{
         display:block;
     }
 .pet-image{
-    width:150px;
-    height:150px;
+    width:100px;
+    height:100px;
     object-fit:cover;
         /*chrome32+, edge16/79+, f36+, o19+, s10+, */
         -o-object-fit: cover;   /**o11.6-o15*/
@@ -134,4 +135,8 @@ td{}
     .td-10{
         width:10%;
         padding:0 1%;
+    }
+    .td-0{
+        width:0;
+        padding:0;
     }

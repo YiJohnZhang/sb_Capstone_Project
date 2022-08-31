@@ -121,13 +121,15 @@ class User(db.Model):
 
     def deleteUser(self):
         '''Delete the user. Delete the record from the table.'''
-        # Todo.
-        
+
+        # implement the following in front-end?
         # dangerousConfirmation = User.;
 
         # if dangerousConfirmation:
         #     db.session.delete(self);
         #     db.session.commit();
+        db.session.delete(self);
+        db.session.commit();
         
         return;
 
@@ -153,9 +155,7 @@ class User(db.Model):
     def deleteUserByUsername(cls, username):
         ''''''
 
-        selectedUser = db.session.get_or_404(username);
-
-        cls.userNotFound(selectedUser);
+        selectedUser = cls.query.get_or_404(username);
 
         if not selectedUser:
             
@@ -382,6 +382,10 @@ class Pet(db.Model):
     medical_record_uptodate = db.Column(db.Boolean, nullable = False, default = False);
     special_needs = db.Column(db.Text, nullable = True);
 
+    userPetThrough = db.relationship('User',
+        secondary='petuser_join',
+        backref='petUserThrough');
+
     petClassReference = db.relationship('PetSpecie', backref=db.backref('petBackReference'));
     # coatDetailReference = db.relationship('CoatDescription', backref=db.backref('petBackReference'));
     # colorReference = db.relationship('Color', backref=db.backref('petBackReference'));
@@ -434,8 +438,9 @@ class Pet(db.Model):
         ''''''
         return vars(self);
 
-    def removePet(self):
-        # Todo. Requires authorization.
+    def deletePet(self):
+        db.session.delete(self);
+        db.session.commit();
         pass;
 
 class PetUserJoin(db.Model):
@@ -463,6 +468,15 @@ class PetUserJoin(db.Model):
     def returnPetsByUsername(cls, username):
         '''Return all pets uploaded by a specified User.'''
         return cls.query.filter(cls.user_username == username).all();
+
+    @classmethod
+    def authenticatePetEdit(cls, user_username, petID):
+        ''''''
+
+        if not cls.query.get((user_username, petID)):
+            return False;
+
+        return True;
 
 class PrimaryBreedTable(db.Model):
     '''Only for dogs and cats.'''

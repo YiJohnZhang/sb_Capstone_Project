@@ -97,10 +97,7 @@ class AddEditPetForm(FlaskForm):
     
     gender = RadioField('Gender',
         validators=[InputRequired()], 
-        choices=[
-            (True, 'Male'),
-            (False, 'Female')
-        ],
+        choices=[],
         render_kw={
             'class':''
         });
@@ -116,7 +113,7 @@ class AddEditPetForm(FlaskForm):
             NumberRange(min=VALID_PET_AGES[0], max=VALID_PET_AGES[1], message=f'Valid Pet Age between: {VALID_PET_AGES[0]} and {VALID_PET_AGES[1]}')
             ]);
     age_certainty = BooleanField('Certain of Age?')
-    weight = FloatField('Pet Weight',
+    weight = FloatField('Pet Weight (lbs.)',
         validators=[
             InputRequired(),
             NumberRange(min=VALID_PET_WEIGHT[0], max=VALID_PET_WEIGHT[1], message=f'Valid Pet Age between: {VALID_PET_WEIGHT[0]} and {VALID_PET_WEIGHT[1]}')

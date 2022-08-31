@@ -98,16 +98,19 @@ def populatePetFormSelectFields(petForm):
     # primary_light_shade = SelectField('Primary Light Shade', validators=[InputRequired()], coerce=int);
     # primary_dark_shade = SelectField('Primary Dark Shade', validators=[InputRequired()], coerce=int);
 
+    # Pet Gender
+    petGenderChoices = [DEFAULT_CHOICE_TUPLE, (True, 'Male'), (False, 'Female')];
+    petForm.gender.choices = petGenderChoices;
+
     # Pet Specie
     petSpecieChoices = [DEFAULT_CHOICE_TUPLE];
     databasePetSpecies = PetSpecie.returnAllSpecies();
     for specie in databasePetSpecies:
-        petSpecieChoices.append((specie.id, specie.specie_name));
+        petSpecieChoices.append((specie.id, specie.specie_fa));
             # Otherwise Jinja yields 'too many values to unpack' error.
 
     petForm.pet_specie.choices = petSpecieChoices;
-        # todo: make it inline
-        # todo: change to icons?
+        # todo: make it inline; change to icons?
 
     # Pet Breed
     petBreedChoices = [DEFAULT_CHOICE_TUPLE];
@@ -153,6 +156,23 @@ def populatePetFormSelectFields(petForm):
     petForm.primary_dark_shade.choices = petDarkColorChoices;
 
     return petForm;
+
+def modifyPetFormSelection(petForm, petFormType = 'addEditPet'):
+
+    if petFormType == 'addEditPet':
+
+        if petForm.gender.choices:
+            petForm.gender.choices.pop(0);
+
+        return;
+
+    elif petFormType == 'searchPet':
+        
+        petForm.gender.default = 0;
+
+        return;
+
+    return; 
 
 def returnSearchPetForm():
     '''Returns a search Pet form for the index and search views.'''
@@ -369,7 +389,11 @@ def searchView():
     ''''''
     # todo. basically the above, but with more information and querying.
         # return render_template();
-    return;
+    searchPetForm = returnSearchPetForm();
+    # raise;
+    return render_template('search.html',
+        form = searchPetForm, displayFormLabel = True, 
+        statistics=returnSiteStatistics());
 
 @app.route('/pets/<int:petID>')
 def petView(petID):
@@ -537,9 +561,6 @@ def editUserView(username):
 def elevatedEditIndexView():
     ''''''
 
-    if not g.user.is_elevated:
-        return abort(404);  # to make it seem it doesn't exist
-
     if RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]).role_id == 1:
         return redirect(url_for('editUsernameDatabase'));   # admin
     elif RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]).role_id == 2:
@@ -552,7 +573,7 @@ def elevatedEditIndexView():
 @rescueOrganizationAction_decorator
 def rescueOrganizeIndexView():
     ''''''
-    # further work: overview of authorized users to maintain the rescue agency's database
+    # not within project scope: overview of authorized users to maintain the rescue agency's database
     
     petList = PetUserJoin.returnPetsByUsername(g.user.username);
 
@@ -564,27 +585,41 @@ def rescueOrganizeIndexView():
 @rescueOrganizationAction_decorator
 def rescueOrganizeAddPetView():
     ''''''
+    # todo.
 
     addPetForm = AddEditPetForm();
-    # todo.
-    return;
+
+    if addPetForm.validate_on_submit():
+        # db add
+        return redirect(url_for('rescueOrganizeIndexView'));
+
+    return render_template('pet/edit.html',
+        form=addPetForm, displayFormLabel=True);
+
 
 @app.route('/dashboard/editPet/<int:petID>/', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
 def rescueOrganizeEditPetView(petID):
     ''''''
+    # todo.
 
     # next up how to wrap the following 2 lines in a decorator:
-    userObject = User.returnUserbyUsername(g.user.username);
-    authenticatePetEdit(userObject, petID);
+    if not PetUserJoin.authenticatePetEdit(session[CURRENT_USER_KEY], petID):
+        return abort(403);
 
     petObject = Pet.returnPetByID(petID);
 
     editPetForm = AddEditPetForm(**(petObject.returnInstanceAttributes()));
-    # todo.
-    # match username to pet to authorize
-    return;
+    populatePetFormSelectFields(editPetForm);
+
+    if editPetForm.validate_on_submit():
+        # db update
+        return redirect(url_for('rescueOrganizeIndexView'));
+
+    return render_template('pet/edit.html',
+        form=editPetForm, displayFormLabel=True,
+        petObject=petObject);
 
 @app.route('/database/users')
 @loginRequired_decorator

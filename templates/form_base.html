@@ -4,8 +4,27 @@
     
     {% if displayFormLabel %}
 
-        {{formField.label}}
-        {{formField}}
+            {% if formField == form.pet_specie %}
+            <div class="btn-group btn-group-toggle">
+                <!-- https://stackoverflow.com/a/64513268 -->
+                {% for formSubfield in form.pet_specie %}
+                    {{ formSubfield(class="btn-check") }}
+                    {{ formSubfield.label(class="btn btn-dark btn-radio") }}
+                {% endfor %}
+            </div>
+            {% elif formField == form.gender %}
+            <div class="btn-group btn-group-toggle">
+                {% for formSubfield in form.gender %}
+                    {{ formSubfield(class="btn-check") }}
+                    {{ formSubfield.label(class="btn btn-dark btn-radio") }}
+                {% endfor %}
+            </div>
+            {% else %}
+
+                {{formField.label}}
+                {{formField}}
+            
+            {% endif %}
 
     {% else %}
 

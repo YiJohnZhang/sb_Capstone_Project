@@ -12,6 +12,8 @@
     <script src="https://unpkg.com/bootstrap"></script>
     <script src="https://unpkg.com/jquery"></script>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/fa.all.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/fa.duotone.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/style.css')}}">
 
 </head>
@@ -27,6 +29,7 @@
               <img id='nav-logo' src="{{url_for('static', filename='petsearch.png')}}" alt="PetSearch logo">
             </a>
           </td>
+          <td class="td-0"><a  id='navbar-home-link' href="/">PETSEARCH</a></td>
           <td class="td-empty"></td>
           {% if not g.user %}
             <td class="td-10 navbar-td">
@@ -36,9 +39,9 @@
               <a class="btn btn-outline-dark btn-sm btn-block" href="/login">Log in</a>
             </td>
           {% else %}
-            <td id='nav-picture_container' class="td-10 navbar-td">
+            <td class="td-0 navbar-td">
               <a href="/users/{{ g.user.username }}">
-                <img src="{{ g.user.image_url }}" alt="{{ g.user.username }} Profile">
+                <img id='navbar-user-img' src="{{ g.user.image_url }}" alt="{{ g.user.username }} Profile">
               </a>
             </td>
             <td class="td-10 navbar-td textAlign-right">
@@ -68,8 +71,8 @@
       {% block content %}
       {% endblock content %}
     </div>
-
-    <script src="/static/scripts/script.js"></script>
-
 </body>
+<script src="/static/scripts/script.js"></script>
+<script src="{{url_for('static', filename=('scripts/searchScript.js'))}}"></script>
+<script src="{{url_for('static', filename=('scripts/fetchSearchPetsScript.js'))}}"></script>
 </html>
