@@ -3,7 +3,7 @@
 let petSearchButton = document.querySelectorAll('#searchForm #searchButton')[0];
 let petSearchForm = document.querySelectorAll('#searchForm input');
 
-// function fetchSearchResults(event){
+function fetchSearchResults(event){
 //     event.preventDefault();
 //     let formValues = {};
 
@@ -11,6 +11,6 @@ let petSearchForm = document.querySelectorAll('#searchForm input');
 //         console.log(`${formElement.name}: ${formElement.value}`);
 //     }
 
-// }
+}
 
 petSearchButton.addEventListener('click', fetchSearchResults);

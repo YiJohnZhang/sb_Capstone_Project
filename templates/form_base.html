@@ -1,35 +1,27 @@
 {{ form.hidden_tag() }}
 
 {% for formField in form if formField.widget.input_type != 'hidden' %}
-    
-    {% if displayFormLabel %}
 
-            {% if formField == form.pet_specie %}
-            <div class="btn-group btn-group-toggle">
-                <!-- https://stackoverflow.com/a/64513268 -->
-                {% for formSubfield in form.pet_specie %}
-                    {{ formSubfield(class="btn-check") }}
-                    {{ formSubfield.label(class="btn btn-dark btn-radio") }}
-                {% endfor %}
-            </div>
-            {% elif formField == form.gender %}
-            <div class="btn-group btn-group-toggle">
-                {% for formSubfield in form.gender %}
-                    {{ formSubfield(class="btn-check") }}
-                    {{ formSubfield.label(class="btn btn-dark btn-radio") }}
-                {% endfor %}
-            </div>
-            {% else %}
-
-                {{formField.label}}
-                {{formField}}
-            
-            {% endif %}
-
+    {% if formField.type == 'RadioField' %}
+        <div class="btn-group btn-group-toggle width-100
+            {% if formField == form.pet_specie %}{% endif %}">
+            <!-- https://stackoverflow.com/a/64513268 -->
+            <!-- Futher optimization: https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.Field.type-->
+            {% for formSubfield in formField %}
+                {{ formSubfield(class="btn-check") }}
+                {{ formSubfield.label(class="btn btn-dark btn-radio") }}
+            {% endfor %}
+        </div>
+    {% elif formField.type == 'BooleanField' %}
+        <div class="form-check form-switch form-check-inline">
+            {{formField(class="form-check-input")}}
+            {{formField.label(class="form-check-label")}}
+        </div>
     {% else %}
-
-        {{ formField(placeholder=formField.label.text, class="form-control") }}
-        
+    <div class='form-floating'>
+        {{formField(class="form-control", placeholder=formField.label.text)}}
+        {{formField.label}}
+    </div>
     {% endif %}
     
     {% for error in formField.errors %}

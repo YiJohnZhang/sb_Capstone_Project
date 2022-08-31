@@ -30,6 +30,8 @@ OBFUSCATION_STRING_LENGTH = 9;
 
 # Search Constants
 DEFAULT_CHOICE_TUPLE = (0, 'All');
+DEFAULT_SEARCH_KWARG = {'gender':0, 'pet_specie':0};
+    # set search parameters for 'gender' and 'pet_specie' to 'all' by default
 
 app = Flask(__name__);
 
@@ -66,7 +68,7 @@ def login(userObject):
 def logout():
     '''Logout user.'''
 
-    if CURRENT_USER_KEY in session:
+    if session:
         session.clear();
 
 def authenticate(claimedUsername):
@@ -164,20 +166,23 @@ def modifyPetFormSelection(petForm, petFormType = 'addEditPet'):
         if petForm.gender.choices:
             petForm.gender.choices.pop(0);
 
+        if petForm.pet_specie.choices:
+            petForm.pet_specie.choices.pop(0);
+
         return;
 
-    elif petFormType == 'searchPet':
+    # elif petFormType == 'searchPet':
         
-        petForm.gender.default = 0;
+    #     petForm.gender.data = 0;
 
-        return;
+    #     return;
 
     return; 
 
-def returnSearchPetForm():
+def returnSearchPetForm(defaultSearchArguments = DEFAULT_SEARCH_KWARG):
     '''Returns a search Pet form for the index and search views.'''
     
-    searchPetForm = SearchPetForm(meta={'csrf': False});
+    searchPetForm = SearchPetForm(meta={'csrf': False}, **defaultSearchArguments);
         # disable csrf: https://stackoverflow.com/a/61052386
 
     # Remove unsearchable fields
@@ -381,7 +386,7 @@ def indexView():
     searchPetForm = returnSearchPetForm();
 
     return render_template('index.html',
-        form = searchPetForm, displayFormLabel = True, 
+        form = searchPetForm, formType = 'search', 
         statistics=returnSiteStatistics());
 
 @app.route('/search')
@@ -392,7 +397,7 @@ def searchView():
     searchPetForm = returnSearchPetForm();
     # raise;
     return render_template('search.html',
-        form = searchPetForm, displayFormLabel = True, 
+        form = searchPetForm, formType='search', 
         statistics=returnSiteStatistics());
 
 @app.route('/pets/<int:petID>')
@@ -561,9 +566,9 @@ def editUserView(username):
 def elevatedEditIndexView():
     ''''''
 
-    if RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]).role_id == 1:
+    if RoleTable.returnRoleIDByUsername(g.user.username).role_id == 1:
         return redirect(url_for('editUsernameDatabase'));   # admin
-    elif RoleTable.returnRoleIDByUsername(session[CURRENT_USER_KEY]).role_id == 2:
+    elif RoleTable.returnRoleIDByUsername(g.user.username).role_id == 2:
         return redirect(url_for('rescueOrganizeIndexView'));   # rescue organization
     
     return abort(404);  # to make it seem it doesn't exist
@@ -594,7 +599,7 @@ def rescueOrganizeAddPetView():
         return redirect(url_for('rescueOrganizeIndexView'));
 
     return render_template('pet/edit.html',
-        form=addPetForm, displayFormLabel=True);
+        form=addPetForm, formType='pet');
 
 
 @app.route('/dashboard/editPet/<int:petID>/', methods=['GET', 'POST'])
@@ -605,20 +610,21 @@ def rescueOrganizeEditPetView(petID):
     # todo.
 
     # next up how to wrap the following 2 lines in a decorator:
-    if not PetUserJoin.authenticatePetEdit(session[CURRENT_USER_KEY], petID):
+    if not PetUserJoin.authenticatePetEdit(g.user.username, petID):
         return abort(403);
 
     petObject = Pet.returnPetByID(petID);
 
     editPetForm = AddEditPetForm(**(petObject.returnInstanceAttributes()));
     populatePetFormSelectFields(editPetForm);
+    modifyPetFormSelection(editPetForm);
 
     if editPetForm.validate_on_submit():
         # db update
         return redirect(url_for('rescueOrganizeIndexView'));
 
     return render_template('pet/edit.html',
-        form=editPetForm, displayFormLabel=True,
+        form=editPetForm, formType='pet',
         petObject=petObject);
 
 @app.route('/database/users')

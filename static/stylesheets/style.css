@@ -17,7 +17,7 @@
 /*  Document CSS Selectors
 */
 body{
-    background-image:url('../paw_print_2160p.jpg');
+    background-image:url('../paw_print_2160p.png');
 }
 
 form{
@@ -116,6 +116,9 @@ form{
 .textAlign-right{
     text-align: right;
 }
+
+.width{}
+    .width-100{width:100%;}
 
 td{}
     .td-empty{

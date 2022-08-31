@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/jquery"></script>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/fa.all.min.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/fa.duotone.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/fa.solid.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/style.css')}}">
 
 </head>
@@ -48,7 +48,7 @@
               {% if g.user.is_elevated %}
                 <a class="btn btn-outline-success btn-sm btn-block" href="/edit"><i class="fa-solid fa-database"></i> Database</a>
               {% else %}
-                <a class="btn btn-outline-danger btn-sm btn-block" href="/edit"><i class="fa-solid fa-heart"></i> Favorites</a>
+                <a class="btn btn-outline-danger btn-sm btn-block" href="/favorites"><i class="fa-solid fa-heart"></i> Favorites</a>
               {% endif %}
             </td>
             <td class="td-10 navbar-td textAlign-right">

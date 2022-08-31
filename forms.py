@@ -11,6 +11,7 @@ MESSAGE_MAX_LENGTH = 5000;
 GENERAL_FIELD_MAX_LENGTH = 16;
 USERNAME_LENGTH = [4, 32];  # username between 4 and 32 characters.
 PASSWORD_LENGTH = [6, 16];  # password between 6 and 16 characters.
+PASSWORD_VALIDATOR_MATCH_MESSAGE = 'Passwords must match.';
 
 # Pet Field Constants
 VALID_PET_AGES = [0, 50];       # between 0 and 50.
@@ -31,8 +32,8 @@ class RegisterForm(LoginForm):
     
     confirm_password = PasswordField('Confirm Password', 
         validators=[
-            Length(min=PASSWORD_LENGTH[0], max=PASSWORD_LENGTH[1]),
-            EqualTo('encrypted_password', message='Passwords must match.')
+            Length(min=PASSWORD_LENGTH[0], max=PASSWORD_LENGTH[1], message=PASSWORD_VALIDATOR_MATCH_MESSAGE),
+            EqualTo('encrypted_password', message=PASSWORD_VALIDATOR_MATCH_MESSAGE)
         ]);
 
     first_name = StringField('First Name', validators=[InputRequired(), Length(max=GENERAL_FIELD_MAX_LENGTH, message=f'Enter the first {GENERAL_FIELD_MAX_LENGTH} characters of your first name.')]);
