@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy;
+# from sqlalchemy import or_;
 from flask_bcrypt import Bcrypt;
 from datetime import datetime;              # timestamp for datetime.utcnow
 
@@ -361,7 +362,6 @@ class Pet(db.Model):
     __tablename__ = 'pet';
 
     id = db.Column(db.BigInteger, autoincrement = True, primary_key = True);
-        # Todo.
     pet_name = db.Column(db.Text, nullable = False);    # 2022-08-31: probably should've just called this 'name' ._.
         # limit the character in form (32)
     description = db.Column(db.Text, nullable = True);
@@ -595,7 +595,9 @@ class PrimaryBreedTable(db.Model):
     __tablename__ = 'primarybreed_join';
     
     pet_id = db.Column(db.BigInteger, db.ForeignKey(Pet.id, ondelete='CASCADE', onupdate='CASCADE'), primary_key = True);
+        # retrosepct: pet_id should be UNIQUE
     breed_id = db.Column(db.SmallInteger, db.ForeignKey(Breed.id), primary_key = True);
+        # 0 is unknown.
 
     petReference = db.relationship('Pet', backref=db.backref('petAlias', cascade='all, delete'));
     breedReference = db.relationship('Breed', backref=db.backref('breedAlias'));
@@ -603,6 +605,8 @@ class PrimaryBreedTable(db.Model):
     def __repr__(self):
         '''Self-representation for a Pet-Breed Join instance.'''
         return f'<PrimaryBreedTable {self.pet_id}-{self.breed_id}>';
+
+    #rule only: dogs and cats with breeds for now, 
 
     @classmethod
     def createBreedJoinEntry(cls, requestData):
@@ -613,12 +617,7 @@ class PrimaryBreedTable(db.Model):
         return;
     
     @classmethod
-    def updateBreedEntry(self):
+    def updateBreedEntry(cls, petID, breedID):
         ''''''
-        # Todo.
-        return;
-
-    def resetBreedEntry(self):
-        ''''''
-        # Todo.
+        # Todo. Remove the existing one, then add the new one with createBreedJoinEntry
         return;

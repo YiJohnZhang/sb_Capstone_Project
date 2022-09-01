@@ -29,6 +29,7 @@ OBFUSCATION_STRING_LENGTH = 9;
 
 # Search Constants
 DEFAULT_CHOICE_TUPLE = (0, 'All');
+BREED_CHOICE_TUPLE = (0, 'Not Available or Any');
 DEFAULT_SEARCH_KWARG = {'gender':0, 'pet_specie':0};
     # set search parameters for 'gender' and 'pet_specie' to 'all' by default
 
@@ -111,16 +112,15 @@ def populatePetFormSelectFields(petForm):
 
     petForm.pet_specie.choices = petSpecieChoices;
         # todo: make it inline; change to icons?
+    
 
     # Pet Breed
-    petBreedChoices = [DEFAULT_CHOICE_TUPLE];
+    petBreedChoices = [BREED_CHOICE_TUPLE];
     # databaseBreedTypes = Breed.returnAllBreeds();
     # for databaseBreedType in databaseBreedTypes:
     #     petBreedChoices.append((databaseBreedType.id, databaseBreedType.breed_name));
-
     petForm.primary_breed.choices = petBreedChoices;
 
-    
     # Pet Coat, Hair Type
     petHairChoices = [DEFAULT_CHOICE_TUPLE];
     databaseHairTypes = CoatDescription.returnAllHairTypes();
@@ -141,7 +141,7 @@ def populatePetFormSelectFields(petForm):
     petLightColorChoices = [DEFAULT_CHOICE_TUPLE];
     databaseLightPetColors = Color.returnAllLightColors();
     for lightPetColor in databaseLightPetColors:
-        petLightColorChoices.append((lightPetColor.id, lightPetColor));
+        petLightColorChoices.append((lightPetColor.id, lightPetColor.color_name));
         
     petForm.primary_light_shade.choices = petLightColorChoices;
 
@@ -149,7 +149,7 @@ def populatePetFormSelectFields(petForm):
     petDarkColorChoices = [DEFAULT_CHOICE_TUPLE];
     databaseDarkPetColors = Color.returnAllDarkColors();
     for databaseDarkPetColor in databaseDarkPetColors:
-        petDarkColorChoices.append((databaseDarkPetColor.id, databaseDarkPetColor));
+        petDarkColorChoices.append((databaseDarkPetColor.id, databaseDarkPetColor.color_name));
         # darkPetColors.append([(color.id, color) for color in Color.returnAllDarkColors()]);
             # Jinja yields 'too many values to unpack' error.
     
@@ -167,13 +167,22 @@ def modifyPetFormSelection(petForm, petFormType = 'addEditPet'):
         if petForm.pet_specie.choices:
             petForm.pet_specie.choices.pop(0);
 
+        if petForm.coat_hair.choices:
+            petForm.coat_hair.choices.pop(0);
+
+        if petForm.coat_pattern.choices:
+            petForm.coat_pattern.choices.pop(0);
+
+        if petForm.primary_light_shade.choices:
+            petForm.primary_light_shade.choices.pop(0);
+
+        if petForm.primary_dark_shade.choices:
+            petForm.primary_dark_shade.choices.pop(0);
+
         return;
-
-    # elif petFormType == 'searchPet':
-        
-    #     petForm.gender.data = 0;
-
-    #     return;
+    
+    elif petFormType == 'searchPet':
+        return;
 
     return; 
 
@@ -724,7 +733,7 @@ def fetchSearchQuery():
 def fetchPetBreeds(petSpecieID):
     ''''''
     validPetBreeds = [];
-    validPetBreeds.append({'id': DEFAULT_CHOICE_TUPLE[0], 'breed_name': DEFAULT_CHOICE_TUPLE[1]});
+    validPetBreeds.append({'id': BREED_CHOICE_TUPLE[0], 'breed_name': str(BREED_CHOICE_TUPLE[1])});
         # key is the text to dispaly, value is the option value because otherwise the reverse dict doesn't work (unless stringified)
 
     petSpecieObject = PetSpecie.returnPetSpecieByID(petSpecieID);
