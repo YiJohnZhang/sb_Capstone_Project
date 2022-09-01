@@ -483,9 +483,12 @@ class Pet(db.Model):
     def returnPetSearchQuery(cls, requestData):
 
         cleanedRequestData = cls.cleanRequestData(requestData, requestType='searchQuery');
-        
-        queryObject = cls.query;
-            # need to join with PrimaryBreedTable
+
+        if cleanedRequestData.get('primary_breed'):
+            queryObject = db.session.query(Pet).join(PrimaryBreedTable);
+            queryObject = queryObject.filter(PrimaryBreedTable.breed_id == cleanedRequestData.get('primary_breed'));
+        else:
+            queryObject = cls.query;
 
         if cleanedRequestData.get('gender') is not None:
             queryObject = queryObject.filter(cls.gender == cleanedRequestData.get('gender'));

@@ -398,15 +398,11 @@ def searchView():
 
         cleanedSearchArguments = Pet.cleanRequestData(request.args, requestType = 'searchQuery');
         # print('----------------------------');
-        # print(cleanedSearchArguments)
+        print(cleanedSearchArguments)
         # print('----------------------------');
 
         searchPetForm = returnSearchPetForm(request.args);
 
-    else:
-        searchPetForm = returnSearchPetForm();
-            # default
-        # build query on it
     return render_template('search.html',
         form = searchPetForm, formType='search',
         petList = Pet.returnPetSearchQuery(request.args));
