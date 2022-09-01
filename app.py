@@ -12,20 +12,20 @@ from models import db, connectDatabase;
 from models import User, Pet;
 from models import RoleTable, PetUserJoin, Breed, PetSpecie, CoatDescription, Color;
 from forms import LoginForm, RegisterForm, RequestElevatedForm, EditUserForm, AddEditPetForm, SearchPetForm;
-from wtforms.compat import iteritems, itervalues;
+# from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
 from flask_debugtoolbar import DebugToolbarExtension;
 
 # Constants
 CURRENT_USER_KEY = "currentUser";
 RETURN_PAGE_KEY = "previousPage";
-IS_USER_ELEVATED_KEY = "isElevated";
-USER_ROLE_KEY = "userRole";
-    # all users get this figure toggled to obfuscate the session key. good thing the session key mutates after every session (login/logout)
-    # also, this to reduce db queries?
+
+# Security
 OBFUSCATION_STRING_KEY = 'obfuscationString';
 OBFUSCATION_STRING_LENGTH = 9;
     # gibberish to change the session key every request
+    # apparently the only way to prevent cookie forging is SSL and expecting the user to clear the cookies.
+        # Flask Session Cookies can be easily decrypted: https://www.youtube.com/watch?v=mhcnBTDLxCI
 
 # Search Constants
 DEFAULT_CHOICE_TUPLE = (0, 'All');
@@ -46,6 +46,12 @@ app.debug = True;
 toolbar = DebugToolbarExtension(app);
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False;
 
+# Make it easier to debug on CLI
+import logging;
+log = logging.getLogger('werkzeug');
+log.setLevel(logging.ERROR);
+    # purpose is to suppress all the GET requests for resources that is time consuming to scroll through
+
 connectDatabase(app);
 db.create_all();
 
@@ -56,13 +62,6 @@ def login(userObject):
     '''Log in user.'''
 
     session[CURRENT_USER_KEY] = userObject.username;
-    session[IS_USER_ELEVATED_KEY] = userObject.is_elevated;
-
-    elevatedUser = RoleTable.returnRoleIDByUsername(userObject.username);
-    if elevatedUser:
-        session[USER_ROLE_KEY] = elevatedUser.role_id;
-    else:
-        session[USER_ROLE_KEY] = None;
 
 def logout():
     '''Logout user.'''
@@ -100,7 +99,7 @@ def populatePetFormSelectFields(petForm):
     # primary_dark_shade = SelectField('Primary Dark Shade', validators=[InputRequired()], coerce=int);
 
     # Pet Gender
-    petGenderChoices = [DEFAULT_CHOICE_TUPLE, (True, 'Male'), (False, 'Female')];
+    petGenderChoices = [DEFAULT_CHOICE_TUPLE, (2, 'Male'), (1, 'Female')];
     petForm.gender.choices = petGenderChoices;
 
     # Pet Specie
@@ -341,7 +340,7 @@ def rescueOrganizationAction_decorator(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         
-        if not session[USER_ROLE_KEY] == 2:
+        if not RoleTable.returnRoleIDByUsername(g.user.username).role_id == 2:
             return abort(404);
             # hide any authorized methods.
 
@@ -355,7 +354,7 @@ def adminAction_decorator(f):
     def wrapper(*args, **kwargs):
         # authenticate helpermethod
         
-        if not session[USER_ROLE_KEY] == 1:
+        if not RoleTable.returnRoleIDByUsername(g.user.username).role_id == 1:
             return abort(404);
             # hide any authorized methods.
 
@@ -391,14 +390,26 @@ def indexView():
 @app.route('/search')
 def searchView():
     ''''''
-    # todo. basically the above, but with more information and querying.
-        # return render_template();
-    searchPetForm = returnSearchPetForm();
-    # raise;
+    
+    # print('----------------------------');
+    # print(request.args);
+
+    if request.args:
+
+        cleanedSearchArguments = Pet.cleanRequestData(request.args, requestType = 'searchQuery');
+        # print('----------------------------');
+        # print(cleanedSearchArguments)
+        # print('----------------------------');
+
+        searchPetForm = returnSearchPetForm(request.args);
+
+    else:
+        searchPetForm = returnSearchPetForm();
+            # default
+        # build query on it
     return render_template('search.html',
         form = searchPetForm, formType='search',
-        petList = Pet.returnAllPets(),
-        statistics=returnSiteStatistics());
+        petList = Pet.returnPetSearchQuery(request.args));
 
 @app.route('/pets/<int:petID>')
 def petView(petID):
@@ -607,10 +618,11 @@ def rescueOrganizeAddPetView():
     modifyPetFormSelection(addPetForm);
 
     if addPetForm.validate_on_submit():
+
         # db add
         return redirect(url_for('rescueOrganizeIndexView'));
 
-    return render_template('pet/edit.html',
+    return render_template('pet/addEdit.html',
         form=addPetForm, formType='addPet');
 
 
@@ -619,7 +631,6 @@ def rescueOrganizeAddPetView():
 @rescueOrganizationAction_decorator
 def rescueOrganizeEditPetView(petID):
     ''''''
-    # todo.
 
     # next up how to wrap the following 2 lines in a decorator:
     if not PetUserJoin.authenticatePetEdit(g.user.username, petID):
@@ -628,14 +639,16 @@ def rescueOrganizeEditPetView(petID):
     petObject = Pet.returnPetByID(petID);
 
     editPetForm = AddEditPetForm(**(petObject.returnInstanceAttributes()));
+
+    print(petObject.returnInstanceAttributes())
+
     populatePetFormSelectFields(editPetForm);
     modifyPetFormSelection(editPetForm);
 
     if editPetForm.validate_on_submit():
-        # db update
         return redirect(url_for('rescueOrganizeIndexView'));
 
-    return render_template('pet/edit.html',
+    return render_template('pet/addEdit.html',
         form=editPetForm, formType='editPet',
         petObject=petObject);
 

@@ -12,7 +12,7 @@
         {%endif%}
     </td></tr>
     <tr><td>
-        <img src="/static/imgs/{{petObject.image_url}}" alt="">
+        <img class="pet-image" src="/static/imgs/{{petObject.image_url}}" alt="">
     </td></tr>
     <tr><td>
         {{petObject.gender}}{%if petObject.sterilized and petObject.gender%}, Neutered{%elif petObject.sterilized and not petObject.gender%}, Spayed{%endif%}
@@ -24,7 +24,7 @@
         Weight: {{petObject.weight}} lbs.
     </td></tr>
     <tr><td>
-        Coat Description: {{petCoatInformation[0]}} {{petCoatInformation[1]}} Coat{%if petCoatInformation[2] and petCoatInformation[2]!='Not Applicable'%}; {{petCoatInformation[2]}}{%endif%}{%if petCoatInformation[3] and petCoatInformation[3]!='Not Applicable'%}; {{petCoatInformation[3]}}{%endif%}
+        Coat Description: {%if petCoatInformation[0] == 'Unknown'%}Unknown Hair, {%else%}{{petCoatInformation[0]}}{%endif%} {%if petCoatInformation[1] == 'Unknown'%}Unknown Coat Pattern{%else%}{{petCoatInformation[1]}} Coat{%endif%}{%if petCoatInformation[2] and petCoatInformation[2]!='Not Applicable'%}; {{petCoatInformation[2]}}{%endif%}{%if petCoatInformation[3] and petCoatInformation[3]!='Not Applicable'%}; {{petCoatInformation[3]}}{%endif%}
     </td></tr>
     <tr><td>
         {{petObject.description}}
@@ -34,6 +34,9 @@
     </td></tr>
     <tr><td>
         Listed by: <a href='/users/{{petObject.userPetThrough[0].username}}'>{{petObject.userPetThrough[0].username}}</a>
+    </td></tr>
+    <tr><td>
+        {%if petObject.trained%}TRAINED{%endif%}&#9;{%if petObject.medical_records_uptodate%}UP-TO-DATE MEDICAL RECORDS AVAILABLE{%endif%}
     </td></tr>
     <tr><td>
         <button class="btn btn-outline-danger"><i class="fa-solid fa-heart"></i> Favorite</button>

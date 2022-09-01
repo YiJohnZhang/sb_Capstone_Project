@@ -12,7 +12,7 @@ function returnPetBreeds(petSpecieID){
 
             for(let breed of data.breeds) {
                     
-                breedOptionHTML += `<option values="${breed.id}">${breed.breed_name}</option>`;
+                breedOptionHTML += `<option value="${breed.id}">${breed.breed_name}</option>`;
 
             }
 

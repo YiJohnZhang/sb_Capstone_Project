@@ -405,13 +405,59 @@ class Pet(db.Model):
         return f'<Pet {self.id}: {self.pet_name}>';
     
     @classmethod
-    def cleanRequestData(cls, requestData):
+    def cleanRequestData(cls, requestData, requestType=None):
         '''Clean request data.'''
 
         mutableRequestData = dict(requestData);
 
         if mutableRequestData.get('csrf_token'):
             mutableRequestData.pop('csrf_token');
+
+        if requestType == 'searchQuery':
+
+            # not sure if this `match`-`case` data structure automatically breaks or not. I'm using Py3.9 anyway.
+                # https://docs.python.org/3/whatsnew/3.10.html#simple-pattern-match-to-a-literal
+
+            if mutableRequestData.get('gender'):
+            
+                mutableRequestData['gender'] = int(mutableRequestData['gender']);
+                    # 0, 1, or 2
+
+                if not mutableRequestData['gender']:   # 0 is falsey
+                    mutableRequestData.pop('gender');
+                else:
+                    mutableRequestData['gender'] = bool(mutableRequestData['gender']-1);
+                        # 2 -> 1 (True => Male), etc.
+
+            if mutableRequestData.get('sterilized'):
+                mutableRequestData['sterilized'] = bool(mutableRequestData['sterilized']);
+
+            if mutableRequestData.get('pet_specie'):
+                mutableRequestData['pet_specie'] = int(mutableRequestData['pet_specie']);
+
+            if mutableRequestData.get('primary_breed'):
+                mutableRequestData['primary_breed'] = int(mutableRequestData['primary_breed']);
+
+            if mutableRequestData.get('coat_hair'):
+                mutableRequestData['coat_hair'] = int(mutableRequestData['coat_hair']);
+
+            if mutableRequestData.get('coat_pattern'):
+                mutableRequestData['coat_pattern'] = int(mutableRequestData['coat_pattern']);
+
+            if mutableRequestData.get('primary_light_shade'):
+                mutableRequestData['primary_light_shade'] = int(mutableRequestData['primary_light_shade']);
+
+            if mutableRequestData.get('primary_dark_shade'):
+                mutableRequestData['primary_dark_shade'] = int(mutableRequestData['primary_dark_shade']);
+
+            if mutableRequestData.get('trained'):
+                mutableRequestData['trained'] = bool(mutableRequestData['trained']);
+
+            if mutableRequestData.get('medical_records_uptodate'):
+                mutableRequestData['medical_records_uptodate'] = bool(mutableRequestData['medical_records_uptodate']);
+
+            # if mutableRequestData.get(''):
+            #     mutableRequestData[''] = bool(mutableRequestData['']);
 
         return mutableRequestData;
 
@@ -432,6 +478,58 @@ class Pet(db.Model):
         ''''''
         
         return cls.query.count();
+
+    @classmethod
+    def returnPetSearchQuery(cls, requestData):
+
+        cleanedRequestData = cls.cleanRequestData(requestData, requestType='searchQuery');
+        
+        queryObject = cls.query;
+            # need to join with PrimaryBreedTable
+
+        if cleanedRequestData.get('gender') is not None:
+            queryObject = queryObject.filter(cls.gender == cleanedRequestData.get('gender'));
+
+        if cleanedRequestData.get('sterilized') is not None:
+            queryObject = queryObject.filter(cls.sterilized == cleanedRequestData.get('sterilized'));
+
+        if cleanedRequestData.get('pet_specie'):
+            # print(cleanedRequestData.get('pet_specie'));
+            # print(type(cleanedRequestData.get('pet_specie')));
+            # print(type(cls.pet_specie));
+            # print(cls.pet_specie);
+            # print(type(cleanedRequestData.get('pet_specie')));
+            # queryObject.filter(cls.pet_specie == cleanedRequestData.get('pet_specie'));
+            
+            queryObject = queryObject.filter(cls.pet_specie == cleanedRequestData.get('pet_specie'));
+                # it is 2022-09-01 01:30, go to sleep.
+
+            # temporaryInteger = cleanedRequestData.get('pet_specie');
+            # queryObject = queryObject.filter(cls.pet_specie == temporaryInteger));
+            # print(cls.query.filter(cls.pet_specie == 1).all());
+            # print(queryObject.all());
+        if cleanedRequestData.get('coat_hair'):
+            queryObject = queryObject.filter(cls.coat_hair == cleanedRequestData.get('coat_hair'));
+
+        if cleanedRequestData.get('coat_pattern'):
+            queryObject = queryObject.filter(cls.coat_pattern == cleanedRequestData.get('coat_pattern'));
+
+        if cleanedRequestData.get('primary_light_shade'):
+            queryObject = queryObject.filter(cls.primary_light_shade == cleanedRequestData.get('primary_light_shade'));
+
+        if cleanedRequestData.get('primary_dark_shade'):
+            queryObject = queryObject.filter(cls.primary_dark_shade == cleanedRequestData.get('primary_dark_shade'));
+
+        if cleanedRequestData.get('trained') is not None:
+            queryObject = queryObject = queryObject.filter(cls.trained == cleanedRequestData.get('trained'));
+
+        if cleanedRequestData.get('medical_records_uptodate') is not None:
+            queryObject = queryObject.filter(cls.medical_records_uptodate == cleanedRequestData.get('medical_records_uptodate'));
+
+        # if cleanedRequestData.get('primary_breed'):
+        #     queryObject = queryObject.filter(PrimaryBreedTable.breed_id == cleanedRequestData.get('primary_breed'));
+
+        return queryObject.all();
 
     @classmethod
     def createPet(cls,requestData):
