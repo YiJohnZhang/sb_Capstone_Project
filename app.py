@@ -179,7 +179,7 @@ def modifyPetFormSelection(petForm, petFormType = 'addEditPet'):
 
 def returnSearchPetForm(defaultSearchArguments = DEFAULT_SEARCH_KWARG):
     '''Returns a search Pet form for the index and search views.'''
-    
+
     searchPetForm = SearchPetForm(meta={'csrf': False}, **defaultSearchArguments);
         # disable csrf: https://stackoverflow.com/a/61052386
 
@@ -213,10 +213,8 @@ def returnSearchPetForm(defaultSearchArguments = DEFAULT_SEARCH_KWARG):
         # print(fieldName);
 
         fieldValidators = searchPetForm[fieldName].validators;
-        # print(fieldValidators);
 
         for fieldValidator in fieldValidators:
-            # print(fieldValidator);
  
             if isinstance(fieldValidator, InputRequired):
                 fieldValidators.remove(fieldValidator);
