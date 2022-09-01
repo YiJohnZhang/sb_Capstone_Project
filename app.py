@@ -1,21 +1,20 @@
+# Libraries
+from functools import wraps;
+import random;
+import string;
+import os;
+# Flask Core
 from flask import Flask;
 from flask import request, session, g, jsonify, render_template, redirect, url_for, flash, abort;
 from sqlalchemy.exc import IntegrityError, InvalidRequestError;
-    # attempt to re-enter a unique constraint, on result found for admin attempt
+# Modules
 from models import db, connectDatabase;
 from models import User, Pet;
 from models import RoleTable, PetUserJoin, Breed, PetSpecie, CoatDescription, Color;
 from forms import LoginForm, RegisterForm, RequestElevatedForm, EditUserForm, AddEditPetForm, SearchPetForm;
-    # add favoritepet?
 from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
-
 from flask_debugtoolbar import DebugToolbarExtension;
-from functools import wraps;
-import os;
-
-import random;
-import string;
 
 # Constants
 CURRENT_USER_KEY = "currentUser";
@@ -397,7 +396,8 @@ def searchView():
     searchPetForm = returnSearchPetForm();
     # raise;
     return render_template('search.html',
-        form = searchPetForm, formType='search', 
+        form = searchPetForm, formType='search',
+        petList = Pet.returnAllPets(),
         statistics=returnSiteStatistics());
 
 @app.route('/pets/<int:petID>')
@@ -405,8 +405,18 @@ def petView(petID):
     ''''''
 
     petObject = Pet.returnPetByID(petID);
+    petCoatInformation = [
+            CoatDescription.gracefullyReturnCoatDescriptionById(petObject.coat_hair).coat_description,
+            CoatDescription.gracefullyReturnCoatDescriptionById(petObject.coat_pattern).coat_description,
+            Color.gracefullyReturnColorByColorID(petObject.primary_light_shade).color_name,
+            Color.gracefullyReturnColorByColorID(petObject.primary_dark_shade).color_name
+        ];
+            #   [CoatDescription(Hair Type), CoatDescription(Coat Pattern), Color (Light), Color (Dark)]
+            #   a bit late to realize DB design short-sighted-ness of the drawbacks of implementing a non-join M-N relationship to avoid a limited number of Join entries since references break.
+            #   basically a work around for now
 
-    return petObject.pet_name;
+    return render_template('pet/profile.html',
+        petObject = petObject, petCoatInformation = petCoatInformation);
 
 # General Public Exclusive Routes
 @app.route('/login', methods=['GET', 'POST'])
@@ -593,16 +603,18 @@ def rescueOrganizeAddPetView():
     # todo.
 
     addPetForm = AddEditPetForm();
+    populatePetFormSelectFields(addPetForm);
+    modifyPetFormSelection(addPetForm);
 
     if addPetForm.validate_on_submit():
         # db add
         return redirect(url_for('rescueOrganizeIndexView'));
 
     return render_template('pet/edit.html',
-        form=addPetForm, formType='pet');
+        form=addPetForm, formType='addPet');
 
 
-@app.route('/dashboard/editPet/<int:petID>/', methods=['GET', 'POST'])
+@app.route('/dashboard/editPet/<int:petID>', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
 def rescueOrganizeEditPetView(petID):
@@ -624,7 +636,7 @@ def rescueOrganizeEditPetView(petID):
         return redirect(url_for('rescueOrganizeIndexView'));
 
     return render_template('pet/edit.html',
-        form=editPetForm, formType='pet',
+        form=editPetForm, formType='editPet',
         petObject=petObject);
 
 @app.route('/database/users')
@@ -654,7 +666,6 @@ def editPetDatabase():
 
 ''' API Routes & API Helper Methods
 '''
-
 def json_serializeSQLAModel(SQLAModelObject):
     ''''''
 
@@ -705,7 +716,6 @@ def fetchSearchQuery():
 @app.route('/api/breeds/<int:petSpecieID>')
 def fetchPetBreeds(petSpecieID):
     ''''''
-
     validPetBreeds = [];
     validPetBreeds.append({'id': DEFAULT_CHOICE_TUPLE[0], 'breed_name': DEFAULT_CHOICE_TUPLE[1]});
         # key is the text to dispaly, value is the option value because otherwise the reverse dict doesn't work (unless stringified)
@@ -733,6 +743,5 @@ def fetchPetBreeds(petSpecieID):
 @app.route('/api/<username>/pets')
 def fetchUserPetList(username):
     ''''''
-
     favoritePets = fetchUsersFavoritePetList(username);
     return jsonify({'favoritePets': favoritePets});

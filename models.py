@@ -58,14 +58,14 @@ class User(db.Model):
     @classmethod
     def gracefullyReturnUserByUsername(cls, username):
         ''''''
-        # no testing
+        
         return cls.query.get(username);
 
 
     @classmethod
     def returnUserbyUsername(cls, username):
         ''''''
-        # no testing
+        
 
         return cls.query.get_or_404(username);
 
@@ -201,7 +201,7 @@ class RoleTable(db.Model):
     @classmethod
     def returnRoleIDByUsername(cls, username):
         '''Returns falsey value if the username is not associated with an elevated role. Otherwise, it returns the elevated role ID.'''
-        # no testing
+        
 
         selectedUserObject = User.returnUserbyUsername(username);
 
@@ -215,7 +215,7 @@ class RoleTable(db.Model):
 
     @classmethod
     def returnNumberOfRescueOrganizations(cls):
-        # no testing
+        
         return cls.query.filter_by(role_id = 2).count();
 
 ''' =============PET CATEGORIES=============
@@ -247,12 +247,12 @@ class PetSpecie(db.Model):
     
     @classmethod
     def returnAllSpecies(cls):
-        # no test
+        
         return cls.query.all();
     
     @classmethod
     def returnPetSpecieByID(cls, petSpecieID):
-        # no test
+        
         return cls.query.get_or_404(petSpecieID);
 
 class CoatDescription(db.Model):
@@ -274,13 +274,17 @@ class CoatDescription(db.Model):
         return f'<CoatDescription {self.id}: {self.coat_description}>';
 
     @classmethod
+    def gracefullyReturnCoatDescriptionById(cls, coatDescriptionID):
+        return cls.query.get(coatDescriptionID);
+            
+    @classmethod
     def returnAllHairTypes(cls):
-        # no test
+        
         return cls.query.filter((cls.id.between(1, 100))).all();
 
     @classmethod
     def returnAllCoatTypes(cls):
-        # no test
+        
         return cls.query.filter((cls.id.between(101, 200))).all();
 
 class Color(db.Model):
@@ -301,13 +305,18 @@ class Color(db.Model):
         return f'<Color {self.id}: {self.color_name} ({self.color_hex})>';
 
     @classmethod
+    def gracefullyReturnColorByColorID(cls, colorID):
+        ''''''
+        return cls.query.get(colorID);
+
+    @classmethod
     def returnAllLightColors(cls):
-        # no test
+        ''''''
         return cls.query.filter((cls.id.between(1, 100))).all();
 
     @classmethod
     def returnAllDarkColors(cls):
-        # no test
+        ''''''        
         return cls.query.filter((cls.id.between(101, 200))).all();
 
 class Breed(db.Model):
@@ -331,17 +340,17 @@ class Breed(db.Model):
     
     @classmethod
     def returnAllBreeds(cls):
-        # no test
+        ''''''
         return cls.query.all();
     
     @classmethod
     def returnAllCatBreeds(cls):
-        # no test
+        ''''''        
         return cls.query.filter(cls.id.between(1, 1000)).all();
     
     @classmethod
     def returnAllDogBreeds(cls):
-        # no test
+        ''''''
         return cls.query.filter(cls.id.between(1001, 2000)).all();
 
 ''' =============PET MODEL=============
@@ -353,7 +362,7 @@ class Pet(db.Model):
 
     id = db.Column(db.BigInteger, autoincrement = True, primary_key = True);
         # Todo.
-    pet_name = db.Column(db.Text, nullable = False);
+    pet_name = db.Column(db.Text, nullable = False);    # 2022-08-31: probably should've just called this 'name' ._.
         # limit the character in form (32)
     description = db.Column(db.Text, nullable = True);
         # limit the character in form (512)
@@ -386,7 +395,7 @@ class Pet(db.Model):
         secondary='petuser_join',
         backref='petUserThrough');
 
-    petClassReference = db.relationship('PetSpecie', backref=db.backref('petBackReference'));
+    petSpecieReference = db.relationship('PetSpecie', backref=db.backref('petSpecieAlias'));
     # coatDetailReference = db.relationship('CoatDescription', backref=db.backref('petBackReference'));
     # colorReference = db.relationship('Color', backref=db.backref('petBackReference'));
         # no reference for multiple
@@ -409,19 +418,19 @@ class Pet(db.Model):
     @classmethod
     def returnPetByID(cls, petID):
         ''''''
-        # no test
+        
         return cls.query.get_or_404(petID);
 
     @classmethod
     def returnAllPets(cls):
         ''''''
-        # no test
+        
         return cls.query.all();
 
     @classmethod
     def returnNumberOfPets(cls):
         ''''''
-        # no test
+        
         return cls.query.count();
 
     @classmethod

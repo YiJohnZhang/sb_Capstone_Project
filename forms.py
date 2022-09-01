@@ -140,7 +140,7 @@ class AddEditPetForm(FlaskForm):
         render_kw={
             'class':''
         });
-    medical_records_uptodate = BooleanField('Up to Date Medical Records?',
+    medical_records_uptodate = BooleanField('Up-to-Date Medical Records Available?',
         false_values=False,
         render_kw={
             'class':''

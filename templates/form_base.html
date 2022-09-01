@@ -14,8 +14,8 @@
         </div>
     {% elif formField.type == 'BooleanField' %}
         <div class="form-check form-switch form-check-inline">
-            {{formField(class="form-check-input")}}
             {{formField.label(class="form-check-label")}}
+            {{formField(class="form-check-input")}}
         </div>
     {% else %}
     <div class='form-floating'>

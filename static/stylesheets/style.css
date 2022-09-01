@@ -78,6 +78,28 @@ form{
     display:inline;
 }
 
+#searchView_search{
+    position:fixed;
+    width:35%;
+    float:left;
+}
+#searchView_petResults{
+    width:60%;
+    float:right;
+}
+    .animal-container{
+        margin:4px;
+        width:250px;    /*yeah, this probably needs to be responsive in the future*/
+        padding:16px;
+        text-align:center;
+    }
+
+#petView{
+    position:relative;
+    width:100%;
+    text-align:center;
+}
+
 /*  General CSS Selectors
 */
 .btn-radio{
@@ -117,6 +139,10 @@ form{
     text-align: right;
 }
 
+.inline{display:inline;}
+.block{display:block;}
+.inline-block{display:inline-block;}
+
 .width{}
     .width-100{width:100%;}
 
@@ -143,3 +169,7 @@ td{}
         width:0;
         padding:0;
     }
+
+.cursor-default{
+    cursor:default;
+}

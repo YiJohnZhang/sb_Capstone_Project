@@ -4,12 +4,18 @@
 
 <div class="row justify-content-md-center">
     <div class="col-lg-7">
-        <h2>Edit {{petObject.pet_name}}.</h2>
+        <h2>
+            {% if formType == 'editPet'%}
+                Edit {{petObject.pet_name}}.
+            {% else %}
+                Add a pet
+            {% endif %}
+        </h2>
         <form method="POST" id="" class="">
         
             {% include 'form_base.html' %}
 
-            <a class="btn btn-outline-danger" href="/database">Cancel Changes</a>
+            <a class="btn btn-outline-danger" href="/edit">Cancel Changes</a>
             <button class="btn btn-dark">Save Changes</button>
         </form>
     </div>

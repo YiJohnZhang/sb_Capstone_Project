@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block backgroundImage %}style="background-image:none"{% endblock backgroundImage %}
+{% block content %}
+<table id="petView">
+    <tr><td>
+        {{petObject.pet_name}}
+        {%if g.user.username == petObject.userPetThrough[0].username%}
+            <br>
+            <a class='btn btn-outline-dark' href='/dashboard/editPet/{{petObject.id}}'><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+            <a class='btn btn-outline-danger' href='/dashboard/editPet/{{petObject.id}}'><i class="fa-solid fa-trash-can"></i> Delete</a>
+        {%endif%}
+    </td></tr>
+    <tr><td>
+        <img src="/static/imgs/{{petObject.image_url}}" alt="">
+    </td></tr>
+    <tr><td>
+        {{petObject.gender}}{%if petObject.sterilized and petObject.gender%}, Neutered{%elif petObject.sterilized and not petObject.gender%}, Spayed{%endif%}
+    </td></tr>
+    <tr><td>
+        Age: {%if not petObject.age_certainty%}~{%endif%}{{petObject.estimated_age}} years old
+    </td></tr>
+    <tr><td>
+        Weight: {{petObject.weight}} lbs.
+    </td></tr>
+    <tr><td>
+        Coat Description: {{petCoatInformation[0]}} {{petCoatInformation[1]}} Coat{%if petCoatInformation[2] and petCoatInformation[2]!='Not Applicable'%}; {{petCoatInformation[2]}}{%endif%}{%if petCoatInformation[3] and petCoatInformation[3]!='Not Applicable'%}; {{petCoatInformation[3]}}{%endif%}
+    </td></tr>
+    <tr><td>
+        {{petObject.description}}
+    </td></tr>
+    <tr><td>
+        Special Needs: {%if petObject.special_needs%}{{petObject.special_needs}}{%else%}None.{%endif%}
+    </td></tr>
+    <tr><td>
+        Listed by: <a href='/users/{{petObject.userPetThrough[0].username}}'>{{petObject.userPetThrough[0].username}}</a>
+    </td></tr>
+    <tr><td>
+        <button class="btn btn-outline-danger"><i class="fa-solid fa-heart"></i> Favorite</button>
+        <button class="btn btn-outline-success"><i class="fa-solid fa-message-dots"></i> Message</button>
+        <button class="btn btn-dark"><i class="fa-duotone fa-flag"></i> Report</button>
+    </td></tr>
+
+</table>
+{% endblock content %}

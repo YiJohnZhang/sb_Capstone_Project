@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div>
+<div class="inline">
     <div id="searchView_search">
         {% include 'form_search.html' %}
     </div>
     <div id="searchView_petResults">
-
+        {% include 'pet_container.html' %}
     </div>
 </div>
 {% endblock content %}

@@ -1,0 +1,18 @@
+{% for petObject in petList %}
+
+<div class='animal-container inline-block btn btn-dark btn-block cursor-default'>
+
+    <a href="/pets/{{petObject.id}}"><img class="pet-image" src="/static/imgs/{{petObject.image_url}}" alt="Picture of {{petObject.name}}" class=""></a>
+    <div class="">
+        <a href="/pets/{{petObject.id}}" class="">{{petObject.pet_name}}</a>
+
+        <p>{{petObject.petSpecieReference.specie_name}}<br>
+        {% if petObject.gender %}Male{%else%}Female{%endif%}{% if petObject.sterilized and petObject.gender%}, Neutered{% elif petObject.sterilized and not petObject.gender%}, Spayed{% endif %}<br>
+        {% if not petObject.age_certainty %}~{% endif %}{{petObject.estimated_age}} years old</p>
+
+    </div>
+
+
+</div>
+
+{% endfor %}

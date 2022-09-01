@@ -33,13 +33,13 @@
                     {% if petList %}
                     <h1>Favorite Pets</h1>
                     {% include 'pet_container.html' %}
-                        {% for favoritePet in petList %}
+                        {#{% for favoritePet in petList %}
                         <div class="pet-container">
                             <!-- <img src="{{url_for('static', filename='imgs/{{favoritePet.image_url}}')}}" alt="{{favoritePet.pet_name}}"> -->
                             <img class="pet-image" src="/static/imgs/{{favoritePet.image_url}}" alt="{{favoritePet.pet_name}}">
                             <a href="/pets/{{favoritePet.id}}">{{favoritePet.pet_name}}</a>
                         </div>
-                        {% endfor %}
+                        {% endfor %}#}
                     {% endif%}
                 </td>
             </tr>
