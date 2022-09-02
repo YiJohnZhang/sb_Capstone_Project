@@ -59,10 +59,10 @@ All of **(Non-Elevated) User Routes** and a Database Management System, dependin
 	- Ban (user)
 
 # 03. Future Developments
-**Date Completed**: 
+**Date Completed**: R, 2022-09-01. Just 1 day and no cake :(
 
 If I had more time beyond the 2 weeks to both work on and document this project, I would have:
-- Database Redesign: A design decision that I made early on in the schema design to reduce space-complexity that introduces one inconvenience to maintain the code base (`app.py: petView: line `)
+- Database Redesign: A design decision that I made early on in the schema design to reduce space-complexity that introduces one inconvenience to maintain the code base (`app.py: petView: line 420 to 425`).
 - UI: Made the Elevated User UI more pretty. Ad tooltips to the UI.
 - User signup has email verification for non-elevated users and location verification (for rescue organization).
 - Change user password.

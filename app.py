@@ -116,10 +116,12 @@ def populatePetFormSelectFields(petForm):
 
     # Pet Breed
     petBreedChoices = [BREED_CHOICE_TUPLE];
-    # databaseBreedTypes = Breed.returnAllBreeds();
-    # for databaseBreedType in databaseBreedTypes:
-    #     petBreedChoices.append((databaseBreedType.id, databaseBreedType.breed_name));
+    databaseBreedTypes = Breed.returnAllBreeds();
+    for databaseBreedType in databaseBreedTypes:
+        petBreedChoices.append((databaseBreedType.id, databaseBreedType.breed_name));
     petForm.primary_breed.choices = petBreedChoices;
+    # Work-around setting validate_choice = False; ~get init value of pet_specie and ???~
+        # this is okay because the javascript will immediately reset the selectable choices
 
     # Pet Coat, Hair Type
     petHairChoices = [DEFAULT_CHOICE_TUPLE];
@@ -179,9 +181,6 @@ def modifyPetFormSelection(petForm, petFormType = 'addEditPet'):
         if petForm.primary_dark_shade.choices:
             petForm.primary_dark_shade.choices.pop(0);
 
-        return;
-    
-    elif petFormType == 'searchPet':
         return;
 
     return; 
@@ -405,8 +404,7 @@ def searchView():
 
         cleanedSearchArguments = Pet.cleanRequestData(request.args, requestType = 'searchQuery');
         # print('----------------------------');
-        print(cleanedSearchArguments)
-        # print('----------------------------');
+        # print(cleanedSearchArguments)
 
         searchPetForm = returnSearchPetForm(request.args);
 
@@ -622,7 +620,7 @@ def rescueOrganizeAddPetView():
 
     if addPetForm.validate_on_submit():
 
-        # db add
+        Pet.createPet(request.form, userUsername = g.user.username);
         return redirect(url_for('rescueOrganizeIndexView'));
 
     return render_template('pet/addEdit.html',
@@ -643,12 +641,12 @@ def rescueOrganizeEditPetView(petID):
 
     editPetForm = AddEditPetForm(**(petObject.returnInstanceAttributes()));
 
-    print(petObject.returnInstanceAttributes())
-
     populatePetFormSelectFields(editPetForm);
     modifyPetFormSelection(editPetForm);
 
     if editPetForm.validate_on_submit():
+        # print(request.form);
+        Pet.updatePet(request.form, petObject);
         return redirect(url_for('rescueOrganizeIndexView'));
 
     return render_template('pet/addEdit.html',
@@ -748,6 +746,7 @@ def fetchPetBreeds(petSpecieID):
         'Dog': Breed.returnAllDogBreeds(),
         'Cat': Breed.returnAllCatBreeds()
     };
+        # inconvenient for maintenance. maybe fix
 
     petBreedQuery = petQueryMapping[f'{petSpecieObject.specie_name}'];
 

@@ -453,8 +453,27 @@ class Pet(db.Model):
             if mutableRequestData.get('trained'):
                 mutableRequestData['trained'] = bool(mutableRequestData['trained']);
 
-            if mutableRequestData.get('medical_records_uptodate'):
-                mutableRequestData['medical_records_uptodate'] = bool(mutableRequestData['medical_records_uptodate']);
+            if mutableRequestData.get('medical_record_uptodate'):
+                mutableRequestData['medical_record_uptodate'] = bool(mutableRequestData['medical_record_uptodate']);
+
+        if requestType == 'addEditPet':
+            
+            # Guaranteed: name, gender, age, weight, pet_specie, primarY_breed, coat_hair, coat_pattern, primary_light_shade, primary_dark...
+            mutableRequestData['gender'] = bool(int(mutableRequestData['gender']) - 1);
+            mutableRequestData['estimated_age'] = int(mutableRequestData['estimated_age']);
+            mutableRequestData['weight'] = int(mutableRequestData['weight']);
+            mutableRequestData['pet_specie'] = int(mutableRequestData['pet_specie']);
+            mutableRequestData['primary_breed'] = int(mutableRequestData['primary_breed']);
+            mutableRequestData['coat_hair'] = int(mutableRequestData['coat_hair']);
+            mutableRequestData['coat_pattern'] = int(mutableRequestData['coat_pattern']);
+            mutableRequestData['primary_light_shade'] = int(mutableRequestData['primary_light_shade']);
+            mutableRequestData['primary_dark_shade'] = int(mutableRequestData['primary_dark_shade']);
+
+            # maybe, maybe not: sterilized, age_certainty, trained, medical_record_uptodate
+            mutableRequestData['sterilized'] = True if mutableRequestData.get('sterilized') else False;
+            mutableRequestData['age_certainty'] = True if mutableRequestData.get('age_certainty') else False;
+            mutableRequestData['trained'] = True if mutableRequestData.get('trained') else False;
+            mutableRequestData['medical_record_uptodate'] = True if mutableRequestData.get('medical_record_uptodate') else False;
 
             # if mutableRequestData.get(''):
             #     mutableRequestData[''] = bool(mutableRequestData['']);
@@ -464,24 +483,21 @@ class Pet(db.Model):
     @classmethod
     def returnPetByID(cls, petID):
         ''''''
-        
         return cls.query.get_or_404(petID);
 
     @classmethod
     def returnAllPets(cls):
         ''''''
-        
         return cls.query.all();
 
     @classmethod
     def returnNumberOfPets(cls):
         ''''''
-        
         return cls.query.count();
 
     @classmethod
     def returnPetSearchQuery(cls, requestData):
-
+        ''''''
         cleanedRequestData = cls.cleanRequestData(requestData, requestType='searchQuery');
 
         if cleanedRequestData.get('primary_breed'):
@@ -526,8 +542,8 @@ class Pet(db.Model):
         if cleanedRequestData.get('trained') is not None:
             queryObject = queryObject = queryObject.filter(cls.trained == cleanedRequestData.get('trained'));
 
-        if cleanedRequestData.get('medical_records_uptodate') is not None:
-            queryObject = queryObject.filter(cls.medical_records_uptodate == cleanedRequestData.get('medical_records_uptodate'));
+        if cleanedRequestData.get('medical_record_uptodate') is not None:
+            queryObject = queryObject.filter(cls.medical_record_uptodate == cleanedRequestData.get('medical_record_uptodate'));
 
         # if cleanedRequestData.get('primary_breed'):
         #     queryObject = queryObject.filter(PrimaryBreedTable.breed_id == cleanedRequestData.get('primary_breed'));
@@ -535,23 +551,44 @@ class Pet(db.Model):
         return queryObject.all();
 
     @classmethod
-    def createPet(cls,requestData):
-        # Todo.
-        pass;
+    def createPet(cls,requestData, userUsername):
+        ''''''
+        cleanedRequestData = cls.cleanRequestData(requestData, requestType='addEditPet');
+        petBreedID = cleanedRequestData.pop('primary_breed');        
+        newPetObject = cls(**cleanedRequestData);
+        db.session.add(newPetObject);
+        
+        db.session.commit();
+        db.session.refresh(newPetObject);
+            # a flush pushes to db, refresh updates object state: https://stackoverflow.com/a/5083472
+
+        PrimaryBreedTable.createBreedJoinEntry(newPetObject.id, petBreedID);
+        PetUserJoin.createPetUserJoinEntry(userUsername, newPetObject.id);
+        db.session.commit();
+        return;
 
     @classmethod
-    def updatePet(cls,requestData):
-        # Todo.
-        pass;
+    def updatePet(cls, requestData, selectedPet):
+        ''''''
+        cleanedRequestData = cls.cleanRequestData(requestData, requestType='addEditPet');
+        # print(cleanedRequestData);
+
+        petID = selectedPet.id;
+        petBreedID = cleanedRequestData.pop('primary_breed');
+        PrimaryBreedTable.updateBreedEntry(petID, petBreedID);
+        db.session.query(cls).filter(cls.pet_name == cleanedRequestData.get('pet_name')).update(cleanedRequestData);
+        db.session.commit();
+        return;
 
     def returnInstanceAttributes(self):
         ''''''
         return vars(self);
 
     def deletePet(self):
+        ''''''
         db.session.delete(self);
         db.session.commit();
-        pass;
+        return;
 
 class PetUserJoin(db.Model):
     # seeded and injected
@@ -578,6 +615,12 @@ class PetUserJoin(db.Model):
     def returnPetsByUsername(cls, username):
         '''Return all pets uploaded by a specified User.'''
         return cls.query.filter(cls.user_username == username).all();
+    
+    @classmethod
+    def createPetUserJoinEntry(cls, userUsername, petID):
+        ''''''
+        db.session.add(cls(**({'user_username':userUsername, 'pet_id':petID})));
+        return;
 
     @classmethod
     def authenticatePetEdit(cls, user_username, petID):
@@ -607,17 +650,19 @@ class PrimaryBreedTable(db.Model):
         return f'<PrimaryBreedTable {self.pet_id}-{self.breed_id}>';
 
     #rule only: dogs and cats with breeds for now, 
+    @classmethod
+    def returnPrimaryBreedEntryByPetID(cls, petID):
+        ''''''
+        return cls.get_or_404(petID);
 
     @classmethod
-    def createBreedJoinEntry(cls, requestData):
-        # Todo.
-        
-        # if breed == none, set to unknown
-
+    def createBreedJoinEntry(cls, petID, breedID):
+        ''''''
+        db.session.add(cls(**({'pet_id':petID, 'breed_id':breedID})));
         return;
-    
+ 
     @classmethod
     def updateBreedEntry(cls, petID, breedID):
         ''''''
-        # Todo. Remove the existing one, then add the new one with createBreedJoinEntry
+        db.session.query(cls).filter(cls.pet_id == petID).update({'breed_id': breedID});
         return;

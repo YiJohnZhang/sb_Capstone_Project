@@ -141,8 +141,7 @@ class AddEditPetForm(FlaskForm):
             Length(max=DESCRIPTION_MAX_LENGTH, message='Pet description in {DESCRIPTION_MAX_LENGTH} charactesr or less.')]);
     image_url = StringField('Pet Image (file upload not available)', 
         validators=[
-            Optional(), 
-            URL(), 
+            Optional(),
             Length(max=MAX_URL_LENGTH)]);
 
     gender = RadioField('Gender',
@@ -152,14 +151,13 @@ class AddEditPetForm(FlaskForm):
         render_kw={
             'class':''
         });
-
     sterilized = BooleanField('Sterilized (Spayed / Neutered)?');
-
+    
+    age_certainty = BooleanField('Certain of Age?');
     estimated_age = IntegerField('Pet Age', 
         validators=[
             InputRequired(), 
             NumberRange(min=VALID_PET_AGES[0], max=VALID_PET_AGES[1], message=f'Valid Pet Age between: {VALID_PET_AGES[0]} and {VALID_PET_AGES[1]}')]);
-    age_certainty = BooleanField('Certain of Age?');
 
     weight = FloatField('Pet Weight (lbs.)',
         validators=[
@@ -169,24 +167,23 @@ class AddEditPetForm(FlaskForm):
     pet_specie = RadioField('Pet Classficiation', 
         validators=[
             InputRequired()], 
-        coerce=int, 
+        coerce=int,
         render_kw={
             'class':'petSpecie_input btn-group btn-group-toggle',
             'data-toggle': "buttons"
         });
 
     primary_breed = SelectField('Pet Breed', validators=[InputRequired()], coerce=int);
+        # set `validate_choice = False` for desperate measures (https://stackoverflow.com/a/71563030)
         # null the selection in new pet logic (models.py) if the pet_classificatino is not dog or cat. doesn't need to be that polished.
         # manually set it to required if pet_classificatino is dog or cat.
-
     coat_hair = SelectField('Coat Hair Type', validators=[InputRequired()], coerce=int);
     coat_pattern = SelectField('Coat Pattern', validators=[Optional()], coerce=int);
-
     primary_light_shade = SelectField('Primary Light Shade', validators=[InputRequired()], coerce=int);
     primary_dark_shade = SelectField('Primary Dark Shade', validators=[InputRequired()], coerce=int);
 
     trained = BooleanField('Trained?');
-    medical_records_uptodate = BooleanField('Up-to-Date Medical Records Available?');
+    medical_record_uptodate = BooleanField('Up-to-Date Medical Records Available?');
 
     special_needs = TextAreaField('Special Needs', validators=[Optional(), Length(max=DESCRIPTION_MAX_LENGTH, message=f'Max Length is {DESCRIPTION_MAX_LENGTH}')]);
 
