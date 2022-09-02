@@ -1,3 +1,13 @@
+- [01. Introduction](#01-introduction)
+  - [Source(s)](#sources)
+- [02. User Flow](#02-user-flow)
+  * [02.01. Public Routes](#0201-public-routes)
+  * [02.02. Non-Elevated User Routes](#0202-non-elevated-user-routes)
+  * [02.03. Elevated User Route](#0203-elevated-user-routes)
+  * [02.04. Features Teased but **NOT** Implemented](#0204-features-teased-but-not-implemented)
+- [03. Future Developments](#03-future-developments)
+
+
 # 01. Introduction
 The project, "PetSearch" is a concept Pet Adoption website that provides a front-end for:
 - **Users** to both **search for pets** and contact pet rescue organizations about interest in pets for adoption, and
@@ -15,7 +25,7 @@ The motivation for **PetSearch** is to:
     - **Animal rescue organizaions** may focus on taking care of pets searching for a home and improving adoption rates. Because animal rescue organizations won't have to spend resources to find and/or keep a technical individual, say a software engineer, to setup and/or manage their database that makes it easier for
     - **Users** to easily search for pets listed for adoption.
 
-## Source(s):
+## Source(s)
 [1] Unknown. *Pet Statistics*. **American Society for the Prevention of Cruelty to Animals**. https://www.aspca.org/helping-people-pets/shelter-intake-and-surrender/pet-statistics (retrieved 2022-08-30)
 
 [2] Cvetkovska, L. *44 Shocking Animal Shelter Statistics (2022 Update)*. **petpedia.co**. https://petpedia.co/animal-shelter-statistics/#14,000%20shelters%20and%20rescue%20groups (updated 2022-02-18, retrieved 2022-08-30)
@@ -31,18 +41,19 @@ The motivation for **PetSearch** is to:
 - View Pets
 > ***insertGIF***
 
-## 02.02. (Non-Elevated) User Route
+## 02.02. Non-Elevated User Routes
 All of **Public Routes** and additional tasks:
 - Edit User Profile
 > ***insertGIF***
 - *Not Implemented*: Send Messages to other Users and Favorite Pets
 
-## 02.03 (Elevated) User Route
+## 02.03. Elevated User Routes
 All of **(Non-Elevated) User Routes** and a Database Management System, depending on the elevated user type:
 - Pet Rescue Organizations ("rescueAgency") can only manage pets they have listed (edit and delete) or add new pets to the database.
 > ***insertGIF***
 - Administrators ("admin") can remove any pet(s) from the database and remove any non-admin user(s) from the database.
-> ***insertGIF***
+[![02.03]()](https://user-images.githubusercontent.com/8562595/188058719-9470f865-cfaa-4653-932b-152dde950e60.mp4)
+
 
 ## 02.04. Features Teased but **NOT** Implemented
 - General
