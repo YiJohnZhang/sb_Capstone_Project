@@ -35,24 +35,26 @@ The motivation for **PetSearch** is to:
 # 02. User Flow
 ## 02.01. Public Routes
 - Login, Register, Request Rescue Organization Account
-> ***insertGIF***
+[![02.01.a(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.a_2022-09-01_21-42-42.png)](https://user-images.githubusercontent.com/8562595/188060462-99c591f3-ffa6-44d3-8b94-a3bb367493e6.mp4)
 - Search Pets
-> ***insertGIF***
+[![02.01.b1(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.b1_2022-09-01_21-43-54.png)](https://user-images.githubusercontent.com/8562595/188060457-eabb5a87-5ba4-41c2-9b2c-0246960ec150.mp4)
+[![02.01.b2(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.b2_2022-09-01_21-44-27.png)](https://user-images.githubusercontent.com/8562595/188060441-49997a46-1ac0-4420-9bc0-5fbd990b5eba.mp4)
 - View Pets
-> ***insertGIF***
+[![02.01.c(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.c_2022-09-01_21-45-01.png)](https://user-images.githubusercontent.com/8562595/188060437-2a50f7c2-3f9c-49ec-ad68-828747a0cda2.mp4)
 
 ## 02.02. Non-Elevated User Routes
 All of **Public Routes** and additional tasks:
 - Edit User Profile
-> ***insertGIF***
+[![02.02.1](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.02.1_2022-09-01_21-45-24.png)](https://user-images.githubusercontent.com/8562595/188060328-7eec77a1-0230-4446-96a2-d31770fb3ecf.mp4)
+[![02.02.2](**IMAGELINK**)]()
 - *Not Implemented*: Send Messages to other Users and Favorite Pets
 
 ## 02.03. Elevated User Routes
 All of **(Non-Elevated) User Routes** and a Database Management System, depending on the elevated user type:
 - Pet Rescue Organizations ("rescueAgency") can only manage pets they have listed (edit and delete) or add new pets to the database.
-> ***insertGIF***
+[![02.03.a](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.03.a_2022-09-01_21-45-56.png)](https://user-images.githubusercontent.com/8562595/188060167-b8e3c137-00e1-46a2-9f96-a27963994d14.mp4)
 - Administrators ("admin") can remove any pet(s) from the database and remove any non-admin user(s) from the database.
-[![02.03](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.03b_2022-09-01_21-29-22.png)](https://user-images.githubusercontent.com/8562595/188058719-9470f865-cfaa-4653-932b-152dde950e60.mp4)
+[![02.03.b](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.03.b_2022-09-01_21-29-22.png)](https://user-images.githubusercontent.com/8562595/188058719-9470f865-cfaa-4653-932b-152dde950e60.mp4)
 
 
 ## 02.04. Features Teased but **NOT** Implemented
