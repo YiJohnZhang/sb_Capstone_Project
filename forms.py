@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm;
-from wtforms import StringField, PasswordField, TextAreaField, RadioField, IntegerField, FloatField, BooleanField, SelectField;
+from wtforms import StringField, PasswordField, TextAreaField, RadioField, IntegerField, FloatField, BooleanField, SelectField, HiddenField;
 from wtforms.validators import InputRequired, Optional, Length, EqualTo, Email, NumberRange, URL;
 
 # General Field Length Constants
@@ -187,6 +187,10 @@ class AddEditPetForm(FlaskForm):
 
     special_needs = TextAreaField('Special Needs', validators=[Optional(), Length(max=DESCRIPTION_MAX_LENGTH, message=f'Max Length is {DESCRIPTION_MAX_LENGTH}')]);
 
-
 class SearchPetForm(AddEditPetForm):
     pass;
+
+# too ambitious: requires view overhaul at this stage.
+# class DeletePetForm(FlaskForm):
+#     # this is created solely for the csrf token
+#     hiddenField = HiddenField('non-CSRF_field');

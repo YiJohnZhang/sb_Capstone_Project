@@ -12,6 +12,7 @@ from models import db, connectDatabase;
 from models import User, Pet;
 from models import RoleTable, PetUserJoin, Breed, PetSpecie, CoatDescription, Color;
 from forms import LoginForm, RegisterForm, RequestElevatedForm, EditUserForm, AddEditPetForm, SearchPetForm;
+# from forms import DeletePetForm;
 # from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
 from flask_debugtoolbar import DebugToolbarExtension;
@@ -604,8 +605,9 @@ def rescueOrganizeIndexView():
     
     petList = PetUserJoin.returnPetsByUsername(g.user.username);
 
-    return render_template('admin/localDatabaseView.html',
-        listedInformation = petList, informationType = 'pets');
+    return render_template('admin/databaseView.html',
+        listedInformation = petList,
+        informationType = ['rescue']);
 
 @app.route('/dashboard/addpet', methods=['GET', 'POST'])
 @loginRequired_decorator
@@ -626,8 +628,7 @@ def rescueOrganizeAddPetView():
     return render_template('pet/addEdit.html',
         form=addPetForm, formType='addPet');
 
-
-@app.route('/dashboard/editPet/<int:petID>', methods=['GET', 'POST'])
+@app.route('/pets/<int:petID>/edit', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
 def rescueOrganizeEditPetView(petID):
@@ -653,6 +654,45 @@ def rescueOrganizeEditPetView(petID):
         form=editPetForm, formType='editPet',
         petObject=petObject);
 
+# Too ambitious this late into the project.
+'''@app.route('/pets/<int:petID>/delete', methods=['POST'])
+@loginRequired_decorator
+@elevatedAction_decorator
+def deletePetView(petID):
+    # this was an after-thought ._.
+
+    deletePetForm = DeletePetForm();
+
+    if deletePetForm.validate_on_submit():
+        if RoleTable.returnRoleIDByUsername(g.user.username).role_id == 1:
+            print(request.form);
+            return redirect(url_for('editPetDatabase'));
+        elif RoleTable.returnRoleIDByUsername(g.user.username).role_id == 2 and PetUserJoin.authenticatePetEdit(g.user.username, petID):
+            print(petID);
+            print(request.form);
+            return redirect(url_for('rescueOrganizeIndexView'))
+    
+        abort(404);
+            # hide this route from the public
+    
+    return()'''
+
+@app.route('/pets/<int:petID>/delete', methods=['GET'])
+@loginRequired_decorator
+@elevatedAction_decorator
+def deletePetView(petID):
+    # this was an after-thought ._.
+
+    if RoleTable.returnRoleIDByUsername(g.user.username).role_id == 1:
+        Pet.deletePet(petID);
+        return redirect(url_for('editPetDatabase'));
+    elif RoleTable.returnRoleIDByUsername(g.user.username).role_id == 2 and PetUserJoin.authenticatePetEdit(g.user.username, petID):
+        Pet.deletePet(petID);
+        return redirect(url_for('rescueOrganizeIndexView'))
+    
+    return abort(404);
+        # hide this route from the public
+
 @app.route('/database/users')
 @loginRequired_decorator
 @adminAction_decorator
@@ -663,7 +703,8 @@ def editUsernameDatabase():
     userList = User.returnAllNonAdminUsers();
 
     return render_template('admin/databaseView.html',
-        listedInformation = userList, informationType = 'users');
+        listedInformation = userList,
+        informationType = ['admin', 'users']);
 
 @app.route('/database/pets')
 @loginRequired_decorator
@@ -674,7 +715,8 @@ def editPetDatabase():
     petList = Pet.returnAllPets();
 
     return render_template('admin/databaseView.html',
-        listedInformation = petList, informationType = 'pets');
+        listedInformation = petList,
+        informationType = ['admin', 'pets']);
 
 # tease with messages.
 

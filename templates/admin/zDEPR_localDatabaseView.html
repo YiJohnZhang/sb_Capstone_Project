@@ -38,9 +38,9 @@
             <td>{{information.petReference.publish_time}}</td>            
             <td>Active</td> <!-- this and below is out of scope -->
             <td>Null</td>
-            <td><a href="/dashboard/editPet/{{information.petReference.id}}" class="btn-outline-primary btn btn-block"><i class="fa-solid fa-pen-to-square"></i> Edit Pet</a></td>
+            <td><a href="/pets/{{information.petReference.id}}/edit" class="btn-outline-primary btn btn-block"><i class="fa-solid fa-pen-to-square"></i> Edit Pet</a></td>
             <td><a href="" class="btn-success btn btn-block"><i class="fa-solid fa-check"></i> Pet Adopted</a></td>
-            <td><a href="" class="btn-danger btn btn-block"><i class="fa-solid fa-trash-can"></i> Delete Pet</a></td>
+            <td><a href="/pets/{{information.petReference.id}}/delete" class="btn-danger btn btn-block"><i class="fa-solid fa-trash-can"></i> Delete Pet</a></td>
         </tr>
     {% endfor %}
 </table>

@@ -580,15 +580,19 @@ class Pet(db.Model):
         db.session.commit();
         return;
 
+    @classmethod
+    def deletePet(cls, petID):
+        ''''''
+        petObject = cls.query.get_or_404(petID);
+        if petObject:
+            db.session.delete(petObject);
+            db.session.commit();
+        
+        return;
+
     def returnInstanceAttributes(self):
         ''''''
         return vars(self);
-
-    def deletePet(self):
-        ''''''
-        db.session.delete(self);
-        db.session.commit();
-        return;
 
 class PetUserJoin(db.Model):
     # seeded and injected

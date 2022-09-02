@@ -2,3 +2,4 @@ venv/
 src/
 imgs/*.html
 *.csv#
+README_assets/

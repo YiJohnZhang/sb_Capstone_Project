@@ -4,6 +4,7 @@
     <!--remove distracting bg image-->
 
 {% block content %}
+{% if informationType[0] == 'admin' %}
 
     <table id="onboardingLinkTable">
         <tr>
@@ -14,7 +15,7 @@
     </table>
     <table>
 
-        {% if informationType=='users' %}
+        {% if informationType[1] == 'users' %}
             <tr>
                 <th>##</th>
                 <th>Image</th>
@@ -63,7 +64,7 @@
                 </tr>
             {% endfor %}
             
-        {% elif informationType=='pets' %}
+        {% elif informationType[1] == 'pets' %}
             <tr>
                 <th>##</th>
                 <th>Pet Image</th>
@@ -91,11 +92,55 @@
                     <td>Active</td>
                     <td><a class="btn-outline-success btn btn-block"><i class="fa-solid fa-message-dots"></i> Message</a></td>
                     <td><a class="btn-outline-danger btn btn-block"><i class="fa-solid fa-hammer-war"></i> Ban</a></td>
-                    <td><a class="btn-danger btn btn-block"><i class="fa-solid fa-trash-can"></i> Delete Pet</a></td>
+                    <td>
+                        <a href="/pets/{{information.id}}/delete" class="btn-danger btn btn-block"><i class="fa-solid fa-trash-can"></i> Delete Pet</a>
+                    </td>
                 </tr>
             {% endfor %}
         {% endif %}
     </table>
 
+{% elif informationType[0] == 'rescue' %}
+
+    <table id="onboardingLinkTable">
+        <!--Not within scope of project.-->
+        <tr>
+            <td class="td-33"><a class="btn btn-outline-dark btn-sm btn-block" href='' class=''>Import Database as CSV</a></td>
+            <td class="td-33"><a class="btn btn-outline-dark btn-sm btn-block" href='' class=''>Export Database as CSV</a></td>
+            <td class="td-33"><a class="btn btn-outline-success btn-sm btn-block" href='/dashboard/addpet' class=''>Manually Add Pet</a></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th>##</th>
+            <th>Pet Image</th>
+            <th>Pet Name</th>
+            <th>Pet Specie</th>
+            <th>Listed Since</th>
+            <th>Status</th>
+            <th>Inquiries</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for information in listedInformation %}
+            <tr>
+                <td></td>
+                <td><img class="pet-image" src=/static/imgs/{{information.petReference.image_url}} alt="{{information.petReference.pet_name}}"></td>
+                <td><a href="/pets/{{information.petReference.id}}">{{information.petReference.pet_name}}</a></td>
+                <td>{{information.petReference.petSpecieReference.specie_name}}</td>    
+                <td>{{information.petReference.publish_time}}</td>            
+                <td>Active</td> <!-- this and below is out of scope -->
+                <td>Null</td>
+                <td><a href="/pets/{{information.petReference.id}}/edit" class="btn-outline-primary btn btn-block"><i class="fa-solid fa-pen-to-square"></i> Edit Pet</a></td>
+                <td><a href="" class="btn-success btn btn-block"><i class="fa-solid fa-check"></i> Pet Adopted</a></td>
+                <td>
+                    <a href="/pets/{{information.petReference.id}}/delete" class="btn-danger btn btn-block"><i class="fa-solid fa-trash-can"></i> Delete Pet</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endif %}
 
 {% endblock content %}
