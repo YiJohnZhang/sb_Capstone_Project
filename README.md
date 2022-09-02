@@ -35,12 +35,12 @@ The motivation for **PetSearch** is to:
 # 02. User Flow
 ## 02.01. Public Routes
 - Login, Register, Request Rescue Organization Account
-[![02.01.a(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.a_2022-09-01_21-42-42.png)](https://user-images.githubusercontent.com/8562595/188060462-99c591f3-ffa6-44d3-8b94-a3bb367493e6.mp4)
+[![02.01.a](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.a_2022-09-01_21-42-42.png)](https://user-images.githubusercontent.com/8562595/188060462-99c591f3-ffa6-44d3-8b94-a3bb367493e6.mp4)
 - Search Pets
-[![02.01.b1(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.b1_2022-09-01_21-43-54.png)](https://user-images.githubusercontent.com/8562595/188060457-eabb5a87-5ba4-41c2-9b2c-0246960ec150.mp4)
-[![02.01.b2(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.b2_2022-09-01_21-44-27.png)](https://user-images.githubusercontent.com/8562595/188060441-49997a46-1ac0-4420-9bc0-5fbd990b5eba.mp4)
+[![02.01.b1](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.b1_2022-09-01_21-43-54.png)](https://user-images.githubusercontent.com/8562595/188060457-eabb5a87-5ba4-41c2-9b2c-0246960ec150.mp4)
+[![02.01.b2](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.b2_2022-09-01_21-44-27.png)](https://user-images.githubusercontent.com/8562595/188060441-49997a46-1ac0-4420-9bc0-5fbd990b5eba.mp4)
 - View Pets
-[![02.01.c(https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.c_2022-09-01_21-45-01.png)](https://user-images.githubusercontent.com/8562595/188060437-2a50f7c2-3f9c-49ec-ad68-828747a0cda2.mp4)
+[![02.01.c](https://github.com/YiJohnZhang/sb_Capstone_Project_01/blob/main/README_assets/02.01.c_2022-09-01_21-45-01.png)](https://user-images.githubusercontent.com/8562595/188060437-2a50f7c2-3f9c-49ec-ad68-828747a0cda2.mp4)
 
 ## 02.02. Non-Elevated User Routes
 All of **Public Routes** and additional tasks:
