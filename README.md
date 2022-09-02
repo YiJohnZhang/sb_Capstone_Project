@@ -52,8 +52,7 @@ All of **(Non-Elevated) User Routes** and a Database Management System, dependin
 - Pet Rescue Organizations ("rescueAgency") can only manage pets they have listed (edit and delete) or add new pets to the database.
 > ***insertGIF***
 - Administrators ("admin") can remove any pet(s) from the database and remove any non-admin user(s) from the database.
-https://user-images.githubusercontent.com/8562595/188058719-9470f865-cfaa-4653-932b-152dde950e60.mp4
-
+[![02.03]()]([https://youtu.be/vt5fpE0bzSY](https://user-images.githubusercontent.com/8562595/188058719-9470f865-cfaa-4653-932b-152dde950e60.mp4))
 
 
 ## 02.04. Features Teased but **NOT** Implemented
