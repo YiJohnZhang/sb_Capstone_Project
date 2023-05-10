@@ -16,3 +16,5 @@ Werkzeug==0.14.1
 WTForms==2.2.1
 setuptools==39.1.0
 	# https://stackoverflow.com/q/7446187
+gunicorn
+	# py http wsgi serve
