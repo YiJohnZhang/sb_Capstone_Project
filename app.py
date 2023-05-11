@@ -34,7 +34,7 @@ BREED_CHOICE_TUPLE = (0, 'Not Available or Any');
 DEFAULT_SEARCH_KWARG = {'gender':0, 'pet_specie':0};
     # set search parameters for 'gender' and 'pet_specie' to 'all' by default
     
-def create_app():
+def create_app(testing: bool=True):
     
     app = Flask(__name__);
 
@@ -46,14 +46,14 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'afsd');
 
     # Configure Debug Toolbar
-    app.debug = True;
+    app.debug = False;
     toolbar = DebugToolbarExtension(app);
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False;
 
     # Make it easier to debug on CLI
-    import logging;
-    log = logging.getLogger('werkzeug');
-    log.setLevel(logging.ERROR);
+#     import logging;
+#     log = logging.getLogger('werkzeug');
+#     log.setLevel(logging.ERROR);
         # purpose is to suppress all the GET requests for resources that is time consuming to scroll through
 
     connectDatabase(app);
