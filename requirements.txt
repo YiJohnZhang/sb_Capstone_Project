@@ -1,3 +1,5 @@
+gunicorn==20.1.0
+	# py http wsgi server
 bcrypt==3.1.4
 cffi==1.14.2
 Click==7.0
@@ -16,5 +18,3 @@ Werkzeug==0.14.1
 WTForms==2.2.1
 setuptools==39.1.0
 	# https://stackoverflow.com/q/7446187
-gunicorn==20.1.0
-	# py http wsgi server
