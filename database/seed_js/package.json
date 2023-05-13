@@ -1,0 +1,14 @@
+{
+  "name": "csvPostgresSeeder",
+  "version": "1.0.0",
+  "description": "generate postgres seed file from csv files",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^3.0.0"
+  }
+}

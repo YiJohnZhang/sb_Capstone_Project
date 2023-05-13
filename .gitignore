@@ -1,4 +1,8 @@
+# libs
 venv/
+node_modules/
+
+# other
 src/
 imgs/*.html
 *.csv#

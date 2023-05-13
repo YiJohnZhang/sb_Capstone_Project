@@ -10,9 +10,13 @@ itsdangerous==0.24
 jedi==0.13.1
 Jinja2==2.10
 MarkupSafe==1.1.1
-psycopg2-binary
+psycopg2-binary==2.8.6
+	# PostgreSQL: 8.4.20 highest; 2.9.0+ requires >= 9.1
+	# https://www.namecheap.com/support/knowledgebase/article.aspx/129/22/what-version-of-the-software-is-used-on-your-servers/
+	# Support: M., Oksana & M., Svetlana
 six==1.11.0
 Werkzeug==0.14.1
 WTForms==2.2.1
 setuptools==39.1.0
 	# https://stackoverflow.com/q/7446187
+gunicorn===20.1.0

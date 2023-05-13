@@ -1,0 +1,9 @@
+id,specie_name,specie_fa
+1,Dog,"<i class=""fa-duotone fa-dog""></i>"
+2,Cat,"<i class=""fa-solid fa-cat""></i>"
+101,Bird,"<i class=""fa-duotone fa-kiwi-bird""></i>"
+102,Reptile,"<i class=""fa-duotone fa-snake""></i>"
+103,Fish,"<i class=""fa-solid fa-fish""></i>"
+104,Amphibian,"<i class=""fa-solid fa-frog""></i>"
+998,Plant,"<i class=""fa-duotone fa-seedling""></i>"
+999,Unknown,"<i class=""fa-duotone fa-paw""></i>"
