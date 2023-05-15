@@ -4,8 +4,7 @@ import random;
 import string;
 import os;
 # Flask Core
-from flask import Flask;
-from flask import request, session, g, jsonify, render_template, redirect, url_for, flash, abort;
+from flask import Blueprint, request, session, g, jsonify, render_template, redirect, url_for, flash, abort;
 from sqlalchemy.exc import IntegrityError, InvalidRequestError;
 # Modules
 from models import db, connectDatabase;
@@ -15,7 +14,9 @@ from forms import LoginForm, RegisterForm, RequestElevatedForm, EditUserForm, Ad
 # from forms import DeletePetForm;
 # from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
-from flask_debugtoolbar import DebugToolbarExtension;
+
+# create main
+main = Blueprint('main', __name__);
 
 # Constants
 CURRENT_USER_KEY = "currentUser";
@@ -33,20 +34,6 @@ DEFAULT_CHOICE_TUPLE = (0, 'All');
 BREED_CHOICE_TUPLE = (0, 'Not Available or Any');
 DEFAULT_SEARCH_KWARG = {'gender':0, 'pet_specie':0};
     # set search parameters for 'gender' and 'pet_specie' to 'all' by default
-
-app = Flask(__name__);
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///sb_capstone_01');
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False; 
-app.config['SQLALCHEMY_ECHO'] = False;
-
-# Configure Sessions (req. for Debug Toolbar)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'afsd');
-
-# Configure Debug Toolbar
-app.debug = True;
-toolbar = DebugToolbarExtension(app);
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False;
 
 # Make it easier to debug on CLI
 import logging;
@@ -253,7 +240,7 @@ def returnSiteStatistics():
 
 '''DECORATORS'''
 # Before & After Decorators
-@app.before_request
+@main.before_request
 def before_request():
     '''Before each request:
         - Obfuscate the encrypted session cookie by injecting random information.
@@ -274,7 +261,7 @@ def before_request():
         # https://stackoverflow.com/a/39777426
         # need the 200 referrer, not the redirect referrrer
 
-@app.after_request
+@main.after_request
 def after_request(req):
     '''After each request:
         - Add non-caching headers.
@@ -370,12 +357,12 @@ def adminAction_decorator(f):
     return wrapper;
 
 # Error Decorators
-@app.errorhandler(404)
+@main.errorhandler(404)
 def error_404(error):
     '''404: Not Found View'''
     return render_template('errors/error.html', errorCode = 404, previousPath = session[RETURN_PAGE_KEY]), 404;
 
-@app.errorhandler(403)
+@main.errorhandler(403)
 def error_403(error):
     '''403: Forbidden View'''
     return render_template('errors/error.html', errorCode = 403, previousPath = session[RETURN_PAGE_KEY]), 403;
@@ -384,7 +371,7 @@ def error_403(error):
 ''' Public Routes
 '''
 # General Public Routes
-@app.route('/')
+@main.route('/')
 def indexView():
     ''''''
 
@@ -394,7 +381,7 @@ def indexView():
         form = searchPetForm, formType = 'search', 
         statistics=returnSiteStatistics());
 
-@app.route('/search')
+@main.route('/search')
 def searchView():
     ''''''
     
@@ -413,7 +400,7 @@ def searchView():
         form = searchPetForm, formType='search',
         petList = Pet.returnPetSearchQuery(request.args));
 
-@app.route('/pets/<int:petID>')
+@main.route('/pets/<int:petID>')
 def petView(petID):
     ''''''
 
@@ -432,7 +419,7 @@ def petView(petID):
         petObject = petObject, petCoatInformation = petCoatInformation);
 
 # General Public Exclusive Routes
-@app.route('/login', methods=['GET', 'POST'])
+@main.route('/login', methods=['GET', 'POST'])
 @logoutRequired_decorator
 def loginView():
     ''''''
@@ -468,7 +455,7 @@ def loginView():
         form=loginForm, onboardingAction='login',
         statistics=returnSiteStatistics());
 
-@app.route('/signup', methods=['GET', 'POST'])
+@main.route('/signup', methods=['GET', 'POST'])
 @logoutRequired_decorator
 def registerView():
     ''''''
@@ -512,7 +499,7 @@ def registerView():
         form=registerForm, onboardingAction='signup',
         statistics=returnSiteStatistics());
 
-@app.route('/rescueSignup', methods=['GET', 'POST'])
+@main.route('/rescueSignup', methods=['GET', 'POST'])
 @logoutRequired_decorator
 def organizationRegisterView():
     ''''''
@@ -533,7 +520,7 @@ def organizationRegisterView():
 ''' Private Routes
 '''
 # General Private Routes
-@app.route('/logout')
+@main.route('/logout')
 @loginRequired_decorator
 def logoutView():
     ''''''
@@ -541,7 +528,7 @@ def logoutView():
     return redirect(url_for('indexView'));
 
 # User Routes
-@app.route('/users/<username>')
+@main.route('/users/<username>')
 def userView(username):
     ''''''
 
@@ -553,7 +540,7 @@ def userView(username):
         userObject = userObject,
         petList = favoritePets);
 
-@app.route('/users/<username>/edit', methods=['GET', 'POST'])
+@main.route('/users/<username>/edit', methods=['GET', 'POST'])
 @loginRequired_decorator
 def editUserView(username):
     ''''''
@@ -583,7 +570,7 @@ def editUserView(username):
         userObject = userObject);
 
 # Restricted Routes
-@app.route('/edit')
+@main.route('/edit')
 @loginRequired_decorator
 @elevatedAction_decorator
 def elevatedEditIndexView():
@@ -596,7 +583,7 @@ def elevatedEditIndexView():
     
     return abort(404);  # to make it seem it doesn't exist
 
-@app.route('/dashboard', methods=['GET', 'POST'])
+@main.route('/dashboard', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
 def rescueOrganizeIndexView():
@@ -609,7 +596,7 @@ def rescueOrganizeIndexView():
         listedInformation = petList,
         informationType = ['rescue']);
 
-@app.route('/dashboard/addpet', methods=['GET', 'POST'])
+@main.route('/dashboard/addpet', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
 def rescueOrganizeAddPetView():
@@ -628,7 +615,7 @@ def rescueOrganizeAddPetView():
     return render_template('pet/addEdit.html',
         form=addPetForm, formType='addPet');
 
-@app.route('/pets/<int:petID>/edit', methods=['GET', 'POST'])
+@main.route('/pets/<int:petID>/edit', methods=['GET', 'POST'])
 @loginRequired_decorator
 @rescueOrganizationAction_decorator
 def rescueOrganizeEditPetView(petID):
@@ -655,7 +642,7 @@ def rescueOrganizeEditPetView(petID):
         petObject=petObject);
 
 # Too ambitious this late into the project.
-'''@app.route('/pets/<int:petID>/delete', methods=['POST'])
+'''@main.route('/pets/<int:petID>/delete', methods=['POST'])
 @loginRequired_decorator
 @elevatedAction_decorator
 def deletePetView(petID):
@@ -677,7 +664,7 @@ def deletePetView(petID):
     
     return()'''
 
-@app.route('/pets/<int:petID>/delete', methods=['GET'])
+@main.route('/pets/<int:petID>/delete', methods=['GET'])
 @loginRequired_decorator
 @elevatedAction_decorator
 def deletePetView(petID):
@@ -693,7 +680,7 @@ def deletePetView(petID):
     return abort(404);
         # hide this route from the public
 
-@app.route('/database/users')
+@main.route('/database/users')
 @loginRequired_decorator
 @adminAction_decorator
 def editUsernameDatabase():
@@ -706,7 +693,7 @@ def editUsernameDatabase():
         listedInformation = userList,
         informationType = ['admin', 'users']);
 
-@app.route('/database/pets')
+@main.route('/database/pets')
 @loginRequired_decorator
 @adminAction_decorator
 def editPetDatabase():
@@ -764,12 +751,12 @@ def serializeUsersFavoritePetList(username):
 
     return None; # {'This is implemented later': 'for non-rescue organizations'};
 
-@app.route('/api/search')
+@main.route('/api/search')
 def fetchSearchQuery():
     # todo? maybe no API search.
     return;
 
-@app.route('/api/breeds/<int:petSpecieID>')
+@main.route('/api/breeds/<int:petSpecieID>')
 def fetchPetBreeds(petSpecieID):
     ''''''
     validPetBreeds = [];
@@ -797,7 +784,7 @@ def fetchPetBreeds(petSpecieID):
 
     return jsonify({'breeds': validPetBreeds});
 
-@app.route('/api/<username>/pets')
+@main.route('/api/<username>/pets')
 def fetchUserPetList(username):
     ''''''
     favoritePets = fetchUsersFavoritePetList(username);

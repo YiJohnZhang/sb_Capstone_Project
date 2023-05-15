@@ -1,6 +1,10 @@
+# python
+__pycache__/
+
 # libs
-venv/
+.venv/
 node_modules/
+.vscode/
 
 # other
 src/
