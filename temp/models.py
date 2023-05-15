@@ -388,7 +388,7 @@ class Pet(db.Model):
         db.ForeignKey(Color.id), default = 0);
 
     trained = db.Column(db.Boolean, nullable = False, default = False);
-    medical_records_uptodate = db.Column(db.Boolean, nullable = False, default = False);
+    medical_record_uptodate = db.Column(db.Boolean, nullable = False, default = False);
     special_needs = db.Column(db.Text, nullable = True);
 
     userPetThrough = db.relationship('User',

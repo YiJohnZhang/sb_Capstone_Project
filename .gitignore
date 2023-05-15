@@ -1,4 +1,12 @@
-venv/
+# python
+__pycache__/
+
+# libs
+.venv/
+node_modules/
+.vscode/
+
+# other
 src/
 imgs/*.html
 *.csv#
