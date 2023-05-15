@@ -41,10 +41,6 @@ log = logging.getLogger('werkzeug');
 log.setLevel(logging.ERROR);
     # purpose is to suppress all the GET requests for resources that is time consuming to scroll through
 
-connectDatabase(app);
-db.create_all();
-
-
 '''HELPER FUNCTIONS'''
 # User Authentication Helper Function(s)
 def login(userObject):

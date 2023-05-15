@@ -22,6 +22,9 @@ def create_app():
 	app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False;
 	
 	db.init_app(app);
+	connectDatabase(app);
+	db.create_all();
+
 	app.register_blueprint(main);
 
 	return app;
