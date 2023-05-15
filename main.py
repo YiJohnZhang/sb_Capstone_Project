@@ -14,13 +14,13 @@ import forms;
 # from models import db, connectDatabase;
 # from models import User, Pet;
 # from models import RoleTable, PetUserJoin, Breed, PetSpecie, CoatDescription, Color;
-# from forms import LoginForm, RegisterForm, RequestElevatedForm, EditUserForm, AddEditPetForm, SearchPetForm;
+# from forms import LoginForm, RegisterForm, RequestElevatedForm, , AddEditPetForm, SearchPetForm;
 # from forms import DeletePetForm;
 # from wtforms.compat import iteritems, itervalues;
 from wtforms.validators import InputRequired;
 from flask_debugtoolbar import DebugToolbarExtension;
 from markupsafe import Markup;
-	# lmao, this is really a stopgap implementation of the app...
+    # lmao, this is really a stopgap implementation of the app...
 
 # Constants
 CURRENT_USER_KEY = "currentUser";
@@ -42,26 +42,28 @@ DEFAULT_SEARCH_KWARG = {'gender':0, 'pet_specie':0};
 app = Flask(__name__);
 
 with app.app_context():
-	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///sb_29_capstone_project_petsearch');
-	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False; 
-	app.config['SQLALCHEMY_ECHO'] = False;
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///sb_29_capstone_project_petsearch');
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False; 
+    app.config['SQLALCHEMY_ECHO'] = False;
 
-	# Configure Sessions (req. for Debug Toolbar)
-	app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'afsd');
+    # Configure Sessions (req. for Debug Toolbar)
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'afsd');
 
-	# Configure Debug Toolbar
-	app.debug = True;
-	toolbar = DebugToolbarExtension(app);
-	app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False;
+    # Configure Debug Toolbar
+    # app.debug = True;
+    app.debug = False;
+    toolbar = DebugToolbarExtension(app);
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False;
 
-	# Make it easier to debug on CLI
-	import logging;
-	log = logging.getLogger('werkzeug');
-	log.setLevel(logging.ERROR);
-	    # purpose is to suppress all the GET requests for resources that is time consuming to scroll through
+    # Make it easier to debug on CLI
+    import logging;
+    log = logging.getLogger('werkzeug');
+    log.setLevel(logging.ERROR);
+        # purpose is to suppress all the GET requests for resources that is time consuming to scroll through
 
-	models.connectDatabase(app);
-	models.db.create_all();
+    models.connectDatabase(app);
+    models.db.create_all();
 
 
 '''HELPER FUNCTIONS'''
@@ -568,7 +570,7 @@ def editUserView(username):
     userObject = models.User.returnUserbyUsername(username);
     authenticate(userObject.username);
 
-    editUserForm = EditUserForm(**(userObject.returnInstanceAttributes()));
+    editUserForm = forms.EditUserForm(**(userObject.returnInstanceAttributes()));
 
     if editUserForm.validate_on_submit():
 
@@ -646,7 +648,7 @@ def rescueOrganizeEditPetView(petID):
 
     petObject = models.Pet.returnPetByID(petID);
 
-    editPetForm = AddEditPetForm(**(petObject.returnInstanceAttributes()));
+    editPetForm = forms.AddEditPetForm(**(petObject.returnInstanceAttributes()));
 
     populatePetFormSelectFields(editPetForm);
     modifyPetFormSelection(editPetForm);
@@ -809,5 +811,10 @@ def fetchUserPetList(username):
     favoritePets = fetchUsersFavoritePetList(username);
     return jsonify({'favoritePets': favoritePets});
 
+@app.route('/health/')
+def renderHealthCheck():
+    return "OK";
+
 if __name__ == "__main__":
     app.run();
+	# app.run(debug=True);

@@ -32,6 +32,8 @@ class User(db.Model):
     is_elevated = db.Column(db.Boolean, nullable = False, default = False);
         # do not show on `forms.py` to register
 
+    userAlias = db.relationship('RoleTable', back_populates='userReference');
+
     # insert foreignkey rel, roletable
 
     def __repr__(self):
@@ -174,6 +176,8 @@ class Role(db.Model):
     id = db.Column(db.SmallInteger, primary_key = True);
     role_name = db.Column(db.String(16), nullable = False);
         # admin, rescueAgency, user
+
+    roleAlias = db.relationship('RoleTable', back_populates='roleReference');
     
     def __repr__(self):
         '''Self-representation for a Role instance.'''
@@ -182,18 +186,21 @@ class Role(db.Model):
 class RoleTable(db.Model):
     # seeded and db edit only.
 
-    __tablename__ = 'userrole_join';
+    # __tablename__ = 'userrole_join';
+    __tablename__ = 'usersrole_join';
 
     user_username = db.Column(
         db.String(32), 
-        db.ForeignKey(User.username, ondelete='CASCADE', onupdate='CASCADE'),
+        db.ForeignKey('users.username'),
         primary_key = True);
     role_id = db.Column(db.SmallInteger, 
-        db.ForeignKey(Role.id, ondelete='CASCADE', onupdate='CASCADE'),
+        db.ForeignKey('role.id'),
         primary_key = True);
 
-    userReference = db.relationship('User', backref=db.backref('userAlias', cascade='all, delete'));
-    roleReference = db.relationship('Role', backref=db.backref('roleJoinAlias', cascade='all, delete'));
+    # userReference = db.relationship('User', backref=db.backref('userAlias', cascade='all, delete'));
+    # roleReference = db.relationship('Role', backref=db.backref('roleJoinAlias', cascade='all, delete'));
+    userReference = db.relationship('User', back_populates='userAlias');
+    roleReference = db.relationship('Role', back_populates='roleAlias');
 
     def __repr__(self):
         '''Self-representation for a RoleTable instance.'''
@@ -203,7 +210,6 @@ class RoleTable(db.Model):
     def returnRoleIDByUsername(cls, username):
         '''Returns falsey value if the username is not associated with an elevated role. Otherwise, it returns the elevated role ID.'''
         
-
         selectedUserObject = User.returnUserbyUsername(username);
 
         if not selectedUserObject:
@@ -453,8 +459,8 @@ class Pet(db.Model):
             if mutableRequestData.get('trained'):
                 mutableRequestData['trained'] = bool(mutableRequestData['trained']);
 
-            if mutableRequestData.get('medical_record_uptodate'):
-                mutableRequestData['medical_record_uptodate'] = bool(mutableRequestData['medical_record_uptodate']);
+            if mutableRequestData.get('medical_records_uptodate'):
+                mutableRequestData['medical_records_uptodate'] = bool(mutableRequestData['medical_records_uptodate']);
 
         if requestType == 'addEditPet':
             
@@ -469,11 +475,11 @@ class Pet(db.Model):
             mutableRequestData['primary_light_shade'] = int(mutableRequestData['primary_light_shade']);
             mutableRequestData['primary_dark_shade'] = int(mutableRequestData['primary_dark_shade']);
 
-            # maybe, maybe not: sterilized, age_certainty, trained, medical_record_uptodate
+            # maybe, maybe not: sterilized, age_certainty, trained, medical_records_uptodate
             mutableRequestData['sterilized'] = True if mutableRequestData.get('sterilized') else False;
             mutableRequestData['age_certainty'] = True if mutableRequestData.get('age_certainty') else False;
             mutableRequestData['trained'] = True if mutableRequestData.get('trained') else False;
-            mutableRequestData['medical_record_uptodate'] = True if mutableRequestData.get('medical_record_uptodate') else False;
+            mutableRequestData['medical_records_uptodate'] = True if mutableRequestData.get('medical_records_uptodate') else False;
 
             # if mutableRequestData.get(''):
             #     mutableRequestData[''] = bool(mutableRequestData['']);
@@ -542,8 +548,8 @@ class Pet(db.Model):
         if cleanedRequestData.get('trained') is not None:
             queryObject = queryObject = queryObject.filter(cls.trained == cleanedRequestData.get('trained'));
 
-        if cleanedRequestData.get('medical_record_uptodate') is not None:
-            queryObject = queryObject.filter(cls.medical_record_uptodate == cleanedRequestData.get('medical_record_uptodate'));
+        if cleanedRequestData.get('medical_records_uptodate') is not None:
+            queryObject = queryObject.filter(cls.medical_records_uptodate == cleanedRequestData.get('medical_records_uptodate'));
 
         # if cleanedRequestData.get('primary_breed'):
         #     queryObject = queryObject.filter(PrimaryBreedTable.breed_id == cleanedRequestData.get('primary_breed'));
